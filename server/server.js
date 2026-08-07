@@ -24,8 +24,8 @@ app.use(cors()) // Enable Cross-Origin Resource Sharing
     app.use('/api/clerk', clerkWebhooks);
 
 app.get('/', (req, res) => res.send('API is working'))
-app,use('/api/user', userRouter)
-app,use('/api/hotels', hotelRouter)
+app.use('/api/user', userRouter)
+app.use('/api/hotels', hotelRouter)
 app.use('/api/rooms', roomRouter)
 app.use('/api/bookings', bookingRouter)
 
