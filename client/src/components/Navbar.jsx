@@ -60,8 +60,8 @@ const Navbar = () => {
                         </a>
                     ))}
                     { user && (
-                            <button className = {`border px-4 py-1 text-sm font-mali rounded-full cursor-pointer ${ isScrolled ? 'text-black' : 'text-black'} transition-all`} onClick = {() => isOwner ? navigate('/owner'): setShowHotelReg(true)}>
-                                {isOwner ? 'Dashboard' : 'List Your Room'}
+                            <button className = {`border px-4 py-1 text-sm font-mali rounded-full cursor-pointer ${ isScrolled ? 'text-black' : 'text-black'} transition-all`} onClick = {() => isOwner ? navigate('/owner') : setShowHotelReg(true)}>
+                                { isOwner ? 'Dashboard' : 'List Your Room' }
                             </button>
                         )
                     }
@@ -106,8 +106,8 @@ const Navbar = () => {
                         </a>
                     ))}
 
-                    { user && <button className = 'border px-4 py-1 text-sm font-mali rounded-full cursor-pointer transition-all' onClick = {()=> setShowHotelReg(false)}>
-                        {isOwner ? 'Dashboard' : 'List Your Room'}
+                    { user && <button className = 'border px-4 py-1 text-sm font-mali rounded-full cursor-pointer transition-all' onClick = {() => isOwner ? navigate('/owner') : setShowHotelReg(true)}>
+                        { isOwner ? 'Dashboard' : 'List Your Room' }
                     </button>}
 
                     { !user && <button  onClick = { openSignIn } className = 'bg-black text-white px-8 py-2.5 rounded-full transition-all duration-500'>
