@@ -1,8 +1,9 @@
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { assets, facilityIcons } from '../assets/assets'
 import { useSearchParams } from 'react-router-dom'
 import StarRating from '../components/StarRating'
 import { useAppContext } from '../context/AppContext'
+import toast from 'react-hot-toast'
 
 const CheckBox = ({ label, selected = false, onChange = () => {}}) => {
     return (
@@ -25,14 +26,110 @@ const RadioButton = ({ label, selected = false, onChange = () => {}}) => {
 const AllRooms = () => {
 
     const [ searchParams, setSearchParams ] = useSearchParams()
-    const { rooms, navigate, currency } = useAppContext();
+    const { rooms, navigate, currency, axios, getToken } = useAppContext();
 
+    const hotelId = searchParams.get('hotelId') || ''
+    const checkInDate = searchParams.get('checkInDate') || ''
+    const checkOutDate = searchParams.get('checkOutDate') || ''
+    const adults = Number(searchParams.get('adults') || 1)
+    const children = Number(searchParams.get('children') || 0)
+    const hasSearchDates = Boolean(hotelId && checkInDate && checkOutDate && checkInDate < checkOutDate)
+
+    const [ availableRoomIds, setAvailableRoomIds ] = useState(null)
+    const [ checkingAvailability, setCheckingAvailability ] = useState(false)
+    const [ bookingRoomId, setBookingRoomId ] = useState('')
     const [ openFilters, setOpenFilters ] = useState(false)
     const [ selectedFilters, setSelectedFilters ] = useState({
         roomType: [],
         priceRange: [],
     });
     const [ selectedSort, setSelectedSort ] = useState('')
+
+    useEffect(() => {
+        if (!hasSearchDates) {
+            setAvailableRoomIds(null)
+            setCheckingAvailability(false)
+            return
+        }
+
+        if (!rooms.length) return
+
+        let cancelled = false
+        const roomIds = rooms
+            .filter((room) => String(room.hotel?._id) === String(hotelId) && room.isAvailable !== false)
+            .map((room) => room._id)
+
+        setAvailableRoomIds(null)
+        setCheckingAvailability(true)
+
+        axios.post('/api/bookings/check-availability', { rooms: roomIds, checkInDate, checkOutDate })
+            .then(({ data }) => {
+                if (cancelled) return
+                if (data.success) {
+                    setAvailableRoomIds(data.availableRoomIds || [])
+                } else {
+                    setAvailableRoomIds([])
+                    toast.error(data.message || 'Could not check room availability')
+                }
+            })
+            .catch((error) => {
+                if (cancelled) return
+                setAvailableRoomIds([])
+                toast.error(error.response?.data?.message || 'Could not check room availability')
+            })
+            .finally(() => {
+                if (!cancelled) setCheckingAvailability(false)
+            })
+
+        return () => {
+            cancelled = true
+        }
+    }, [ rooms, hotelId, checkInDate, checkOutDate, hasSearchDates, axios ])
+
+    const goToRoomDetails = (room) => {
+        const detailsParams = new URLSearchParams()
+        if (checkInDate) detailsParams.set('checkInDate', checkInDate)
+        if (checkOutDate) detailsParams.set('checkOutDate', checkOutDate)
+        if (adults) detailsParams.set('adults', String(adults))
+        if (Number.isFinite(children)) detailsParams.set('children', String(children))
+
+        const query = detailsParams.toString()
+        navigate(`/rooms/${ room._id }${ query ? `?${ query }` : '' }`)
+        scrollTo(0, 0)
+    }
+
+    const handleSelectRoom = async (room) => {
+        if (!hasSearchDates) {
+            toast.error('Please choose check-in and check-out dates on the Home page first')
+            return
+        }
+
+        setBookingRoomId(room._id)
+        try {
+            const token = await getToken()
+            const { data } = await axios.post('/api/bookings/book', {
+                room: room._id,
+                checkInDate,
+                checkOutDate,
+                adults,
+                children,
+                guests: adults + children,
+                paymentMethod: 'Pay At Hotel',
+            }, { headers: { Authorization: `Bearer ${ token }` } })
+
+            if (data.success) {
+                toast.success(data.message)
+                navigate('/my-bookings')
+                scrollTo(0, 0)
+            } else {
+                toast.error(data.message || 'Failed to book room')
+            }
+        } catch (error) {
+            toast.error(error.response?.data?.message || error.message || 'Failed to book room')
+        } finally {
+            setBookingRoomId('')
+        }
+    }
 
     const roomTypes = [
         'Standard Room',
@@ -103,17 +200,19 @@ const AllRooms = () => {
         return 0;
     }
 
-        // Filter Destination
-    const filterDestination = (room) => {
-        const destination = searchParams.get('destination');
-        if(!destination) return true;
-        return room.hotel.city.toLowerCase().includes(destination.toLowerCase())
+        // Limit search results to the one hotel selected by the Hero form.
+    const filterHotel = (room) => {
+        if (!hotelId) return true
+        return String(room.hotel?._id) === String(hotelId)
     }
 
-        // Filter and sort rooms based on the selected filters and sort option
+        // Apply room filters and, when dates are supplied, show only rooms available for the full stay.
     const filteredRooms = useMemo(() => {
-        return rooms.filter(room => matchesRoomType(room) && matchesPriceRange(room) && filterDestination(room)).sort(sortRooms);
-    }, [ rooms, selectedFilters, selectedSort, searchParams ])
+        return rooms.filter((room) => {
+            const matchesAvailability = !hasSearchDates || (Array.isArray(availableRoomIds) && availableRoomIds.includes(room._id))
+            return filterHotel(room) && matchesRoomType(room) && matchesPriceRange(room) && matchesAvailability
+        }).sort(sortRooms)
+    }, [ rooms, selectedFilters, selectedSort, hotelId, checkInDate, checkOutDate, hasSearchDates, availableRoomIds ])
 
         // Clear All filters
     const clearFilters = () => {
@@ -135,11 +234,11 @@ const AllRooms = () => {
 
                 { filteredRooms.map((room) => (
                     <div key = {room._id} className = 'flex flex-col md:flex-row items-start py-10 gap-6 border-b border-gray-300 last:pb-30 last:border-0'>
-                        <img onClick = {() => { navigate(`/rooms/${room._id}`); scrollTo(0, 0)}} src = {room.images[0]} alt = 'hotel-img' title = 'View Room Details' className = 'max-h-65 md:w-1/2 rounded-xl shadow-lg object-cover cursor-pointer' />
+                        <img onClick = {() => goToRoomDetails(room)} src = {room.images[0]} alt = 'hotel-img' title = 'View Room Details' className = 'max-h-65 md:w-1/2 rounded-xl shadow-lg object-cover cursor-pointer' />
                         
                         <div className = 'md:w-1/2 flex flex-col gap-2'>
                             <p className = 'text-gray-500'>{ room.hotel.city }</p>
-                            <p onClick = {() => { navigate(`/rooms/${room._id}`); scrollTo(0, 0)}} className = 'text-gray-800 text-3xl font-mali cursor-pointer'>{ room.roomType }</p>
+                            <p onClick = {() => goToRoomDetails(room)} className = 'text-gray-800 text-3xl font-mali cursor-pointer'>{ room.roomType }</p>
 
                             <div className = 'flex items-center'>
                                 <StarRating />
@@ -163,9 +262,30 @@ const AllRooms = () => {
 
                             {/* Room Price per Night */}
                                 <p className = 'text-xl font-mali text-gray-700'>{ currency } { room.pricePerNight } / night</p>
+
+                            { hasSearchDates && (
+                                <button
+                                    type = 'button'
+                                    onClick = { () => handleSelectRoom(room) }
+                                    disabled = { checkingAvailability || bookingRoomId === room._id || !Array.isArray(availableRoomIds) || !availableRoomIds.includes(room._id) }
+                                    className = 'mt-3 rounded-md bg-black px-5 py-3 text-white cursor-pointer disabled:cursor-not-allowed disabled:opacity-50'
+                                >
+                                    { bookingRoomId === room._id ? 'Booking...' : 'Select Room & Book' }
+                                </button>
+                            )}
                         </div>
                     </div>
                 ))}
+
+                { filteredRooms.length === 0 && (
+                    <p className = 'font-mali text-gray-500 py-8'>
+                        { checkingAvailability
+                            ? 'Checking room availability...'
+                            : hasSearchDates
+                                ? 'No rooms are available for these dates, or no matching room was found.'
+                                : 'No rooms found.' }
+                    </p>
+                )}
             </div>
 
             {/* Filters */}
