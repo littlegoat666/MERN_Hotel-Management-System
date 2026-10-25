@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { assets, facilityIcons } from '../assets/assets'
 import { useSearchParams } from 'react-router-dom'
 import StarRating from '../components/StarRating'
@@ -207,12 +207,10 @@ const AllRooms = () => {
     }
 
         // Apply room filters and, when dates are supplied, show only rooms available for the full stay.
-    const filteredRooms = useMemo(() => {
-        return rooms.filter((room) => {
-            const matchesAvailability = !hasSearchDates || (Array.isArray(availableRoomIds) && availableRoomIds.includes(room._id))
-            return filterHotel(room) && matchesRoomType(room) && matchesPriceRange(room) && matchesAvailability
-        }).sort(sortRooms)
-    }, [ rooms, selectedFilters, selectedSort, hotelId, checkInDate, checkOutDate, hasSearchDates, availableRoomIds ])
+    const filteredRooms = rooms.filter((room) => {
+        const matchesAvailability = !hasSearchDates || (Array.isArray(availableRoomIds) && availableRoomIds.includes(room._id))
+        return filterHotel(room) && matchesRoomType(room) && matchesPriceRange(room) && matchesAvailability
+    }).sort(sortRooms)
 
         // Clear All filters
     const clearFilters = () => {
