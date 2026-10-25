@@ -14,7 +14,9 @@ const Hero = () => {
     const hotel = rooms.find((room) => room.hotel?._id)?.hotel
     const hotelId = hotel?._id
     const destination = hotel ? (hotel.name ? `${ hotel.name } — ${ hotel.city }` : hotel.city) : ''
-    const today = new Date().toISOString().split('T')[0]
+    const today = new Date()
+    today.setMinutes(today.getMinutes() - today.getTimezoneOffset())
+    const minDate = today.toISOString().split('T')[0]
 
     const onSearch = (e) => {
         e.preventDefault()
