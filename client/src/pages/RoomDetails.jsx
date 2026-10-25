@@ -15,6 +15,9 @@ const RoomDetails = () => {
     const [ checkOutDate, setCheckOutDate ] = useState(searchParams.get('checkOutDate') || '')
     const [ adults, setAdults ] = useState(searchParams.get('adults') ? Number(searchParams.get('adults')) : 0)
     const [ children, setChildren ] = useState(searchParams.get('children') ? Number(searchParams.get('children')) : 0)
+    const today = new Date()
+    today.setMinutes(today.getMinutes() - today.getTimezoneOffset())
+    const minDate = today.toISOString().split('T')[0]
 
     const [ isAvailable, setIsAvailable ] = useState(false);
 
@@ -136,7 +139,7 @@ const RoomDetails = () => {
                             setCheckInDate(newCheckInDate)
                             setIsAvailable(false)
                             if (checkOutDate && checkOutDate <= newCheckInDate) setCheckOutDate('')
-                        }} value = { checkInDate } min = { new Date().toISOString().split('T')[0] } type = 'date' id = 'checkInDate' placeholder = 'Check-In' className = 'w-full rounded border border-gray-300 px-3 py-2 mt-1.5 outline-none' required/>
+                        }} value = { checkInDate } min = { minDate } type = 'date' id = 'checkInDate' placeholder = 'Check-In' className = 'w-full rounded border border-gray-300 px-3 py-2 mt-1.5 outline-none' required/>
                     </div>
 
                     <div className = 'w-px h-15 bg-gray-300/70 max-md:hidden'></div>
