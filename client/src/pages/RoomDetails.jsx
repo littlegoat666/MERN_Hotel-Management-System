@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useSearchParams } from 'react-router-dom'
 import { assets, facilityIcons, roomCommonData } from '../assets/assets'
 import StarRating from '../components/StarRating'
 import { useAppContext } from '../context/AppContext'
@@ -7,13 +7,14 @@ import toast from 'react-hot-toast'
 
 const RoomDetails = () => {
     const { id } = useParams()
+    const [ searchParams ] = useSearchParams()
     const { rooms, getToken, axios, navigate, currency } = useAppContext()
     const [ room, setRoom ] = useState(null)
     const [ mainImage, setMainImage ] = useState(null)
-    const [ checkInDate, setCheckInDate ] = useState(null);
-    const [ checkOutDate, setCheckOutDate ] = useState(null);
-    const [ adults, setAdults ] = useState(0);
-    const [ children, setChildren ] = useState(0);
+    const [ checkInDate, setCheckInDate ] = useState(searchParams.get('checkInDate') || '')
+    const [ checkOutDate, setCheckOutDate ] = useState(searchParams.get('checkOutDate') || '')
+    const [ adults, setAdults ] = useState(searchParams.get('adults') ? Number(searchParams.get('adults')) : 0)
+    const [ children, setChildren ] = useState(searchParams.get('children') ? Number(searchParams.get('children')) : 0)
 
     const [ isAvailable, setIsAvailable ] = useState(false);
 
@@ -130,14 +131,22 @@ const RoomDetails = () => {
                 <div className = 'flex flex-col flex-wrap md:flex-row items-start md:items-center gap-4 md:gap-10 text-gray-500'>
                     <div className = 'flex flex-col'>
                         <label htmlFor = 'checkInDate' className = 'font-mali'> Check-In </label>
-                        <input onChange = { (e) => setCheckInDate(e.target.value) } min = { new Date().toISOString().split('T')[0] } type = 'date' id = 'checkInDate' placeholder = 'Check-In' className = 'w-full rounded border border-gray-300 px-3 py-2 mt-1.5 outline-none' required/>
+                        <input onChange = { (e) => {
+                            const newCheckInDate = e.target.value
+                            setCheckInDate(newCheckInDate)
+                            setIsAvailable(false)
+                            if (checkOutDate && checkOutDate <= newCheckInDate) setCheckOutDate('')
+                        }} value = { checkInDate } min = { new Date().toISOString().split('T')[0] } type = 'date' id = 'checkInDate' placeholder = 'Check-In' className = 'w-full rounded border border-gray-300 px-3 py-2 mt-1.5 outline-none' required/>
                     </div>
 
                     <div className = 'w-px h-15 bg-gray-300/70 max-md:hidden'></div>
 
                     <div className = 'flex flex-col'>
                         <label htmlFor = 'checkOutDate' className = 'font-mali'> Check-Out </label>
-                        <input onChange = { (e) => setCheckOutDate(e.target.value) } min = { checkInDate } disabled = { !checkInDate } type = 'date' id = 'checkOutDate' placeholder = 'Check-Out' className = 'w-full rounded border border-gray-300 px-3 py-2 mt-1.5 outline-none' required/>
+                        <input onChange = { (e) => {
+                            setCheckOutDate(e.target.value)
+                            setIsAvailable(false)
+                        }} value = { checkOutDate } min = { checkInDate || new Date().toISOString().split('T')[0] } disabled = { !checkInDate } type = 'date' id = 'checkOutDate' placeholder = 'Check-Out' className = 'w-full rounded border border-gray-300 px-3 py-2 mt-1.5 outline-none disabled:bg-gray-100' required/>
                     </div>
 
                     <div className = 'w-px h-15 bg-gray-300/70 max-md:hidden'></div>
