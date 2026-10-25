@@ -13,10 +13,15 @@ import gmailIcon from './gmailIcon.svg'
 import phoneCallIcon from './phoneCallIcon.svg'
 
 import freeWifiIcon from './freeWifiIcon.svg'
-import freeBreakfastIcon from './freeBreakfastIcon.svg'
 import roomServiceIcon from './roomServiceIcon.svg'
 import mountainIcon from './mountainIcon.svg'
 import poolIcon from './poolIcon.svg'
+import  furnitureIcon from './furniture-icon.svg'
+import  parkingIcon from './parking-line.svg'
+import gardenIcon from './tree-plant-icon.svg'
+import cctvIcon from './cctv-icon.svg'
+import smokingIcon from './smoking-icon.svg'
+import accessibleIcon from './wheelchair-icon.svg'
 import homeIcon from './homeIcon.svg'
 import closeIcon from './closeIcon.svg'
 import locationFilledIcon from './locationFilledIcon.svg'
@@ -56,9 +61,14 @@ export const assets = {
     gmailIcon,
     phoneCallIcon,
     freeWifiIcon,
-    freeBreakfastIcon,
     roomServiceIcon,
     mountainIcon,
+    furnitureIcon,
+    parkingIcon,
+    gardenIcon,
+    cctvIcon,
+    smokingIcon,
+    accessibleIcon,
     poolIcon,
     closeIcon,
     homeIcon,
@@ -97,11 +107,16 @@ export const testimonials = [
 
 // Facility Icon
 export const facilityIcons = {
-    'Free WiFi': assets.freeWifiIcon,
-    'Free Breakfast': assets.freeBreakfastIcon,
+    'Free Wi-Fi': assets.freeWifiIcon,
     'Room Service': assets.roomServiceIcon,
     'Mountain View': assets.mountainIcon,
     'Pool Access': assets.poolIcon,
+    'Garden': assets.gardenIcon,
+    'Security Cameras': assets.cctvIcon,
+    'Furniture Included': assets.furnitureIcon,
+    'Parking': assets.parkingIcon,
+    'Smoking Area': assets.smokingIcon,
+    'Accessible to Disabled': assets.accessibleIcon,
 };
 
 // For Room Details Page

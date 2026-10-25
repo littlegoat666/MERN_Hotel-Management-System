@@ -11,7 +11,7 @@ const FeaturedDestination = () => {
 
             <Title title = 'Our recommend rooms' subTitle = 'Explore our top-rated hotels in popular destinations' />
 
-            <div className = 'flex flex-wrap items-center justify-center gap-6 mt-20'>
+            <div className = 'grid w-full max-w-6xl grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-10'>
                 { rooms.slice(0, 4).map((room, index) => (
                     <HotelCard key = {room._id} room = {room} index = {index}/>
                 ))}

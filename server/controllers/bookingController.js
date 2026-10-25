@@ -29,7 +29,7 @@ export const checkAvailabilityAPI = async (req, res) => {
             checkOutDate,
             room
         });
-        res.json({ isAvailable })
+        res.json({ success: true, isAvailable })
 
     } catch (error) {
         res.json({ success: false, message : error.message })
@@ -40,7 +40,14 @@ export const checkAvailabilityAPI = async (req, res) => {
 // POST /api/bookings/book
 export const createBooking = async (req, res) => {
     try {
-        const { room, checkInDate, checkOutDate, guests } = req.body;
+        const { room, checkInDate, checkOutDate, guests, adults, children } = req.body;
+        const adultCount = adults === undefined ? Number(guests) : Number(adults);
+        const childrenCount = children === undefined ? 0 : Number(children);
+
+        if (!Number.isInteger(adultCount) || adultCount < 1 || !Number.isInteger(childrenCount) || childrenCount < 0) {
+            return res.json({ success: false, message: 'Invalid guest count' });
+        }
+
         const user = req.user._id;
 
             // Before Booking Check Availability
@@ -69,7 +76,9 @@ export const createBooking = async (req, res) => {
             user,
             room,
             hotel: roomData.hotel._id,
-            guests: +guests,
+            guests: adultCount + childrenCount,
+            adults: adultCount,
+            children: childrenCount,
             checkInDate,
             checkOutDate,
             totalPrice,

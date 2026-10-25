@@ -20,10 +20,15 @@ const AddRoom = () => {
         pricePerNight: '',
         amenities: {
             'Free Wi-Fi': false,
-            'Free Breakfast': false,
             'Room Service': false,
             'Mountain View': false,
             'Pool Access': false,
+            'Garden': false,
+            'Security Cameras': false,
+            'Furniture Included': false,
+            'Parking': false,
+            'Smoking Area': false,
+            'Accessible to Disabled': false,
         }
     })
 
@@ -61,10 +66,15 @@ const AddRoom = () => {
                     pricePerNight: 0,
                     amenities: {
                         'Free Wi-Fi': false,
-                        'Free Breakfast': false,
                         'Room Service': false,
                         'Mountain View': false,
                         'Pool Access': false,
+                        'Garden': false,
+                        'Security Cameras': false,
+                        'Furniture Included': false,
+                        'Parking': false,
+                        'Smoking Area': false,
+                        'Accessible to Disabled': false,
                     }
                 })
 
@@ -104,9 +114,13 @@ const AddRoom = () => {
                     <p className = 'text-gray-800 mt-4'> Room Type </p>
                     <select value = { inputs.roomType } onChange = { e => setInputs({...inputs, roomType: e.target.value})} className = 'border opacity-70 border-gray-300 mt-1 rounded p-2 w-full' >
                         <option value = ''> Select Room Type </option>
-                        <option value = 'Single Bed'> Single Bed </option>
-                        <option value = 'Double Bed'> Double Bed </option>
-                        <option value = 'Luxury Room'> Luxury Room </option>
+                        <option value = 'Standard Room'> Standard Room </option>
+                        <option value = 'Standard Double'> Standard Double </option>
+                        <option value = 'Superior Room'> Superior Room </option>
+                        <option value = 'Superior Double'> Superior Double </option>
+                        <option value = 'Deluxe Room'> Deluxe Room </option>
+                        <option value = 'Deluxe Double'> Deluxe Double </option>
+                        <option value = 'Junior Suite'> Junior Suite </option>
                         <option value = 'Family Suite'> Family Suite </option>
                     </select>
                 </div>
@@ -121,7 +135,7 @@ const AddRoom = () => {
             </div>
 
             <p className = 'text-gray-800 mt-4'> Amenities </p>
-            <div className = 'flex flex-col flex-wrap mt-1 text-gray-400 max-w-sm'>
+            <div className = 'grid grid-cols-2 gap-x-6 gap-y-1 mt-1 text-gray-400 max-w-lg'>
                 { Object.keys(inputs.amenities).map((amenity, index) => (
                     <div key = { index }>
                         <input type = 'checkbox' id = {`amenities${ index+1 }`} checked = { inputs.amenities[amenity] } onChange = {() => setInputs({...inputs, amenities: {...inputs.amenities, [amenity]: !inputs.amenities[amenity]}})} />

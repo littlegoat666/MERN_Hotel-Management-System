@@ -35,17 +35,21 @@ const AllRooms = () => {
     const [ selectedSort, setSelectedSort ] = useState('')
 
     const roomTypes = [
-        'Single Bed',
-        'Double Bed',
-        'Luxury Room',
-        'Family Suite',
+        'Standard Room',
+        'Standard Double',
+        'Superior Room',
+        'Superior Double',
+        'Deluxe Room',
+        'Deluxe Double',
+        'Junior Suite',
+        'Family Suite'
     ];
 
     const priceRanges = [
-        '0 to 500',
-        '500 to 1000',
-        '1000 to 1500',
-        '1500 to 2000',
+        '0 to 250',
+        '251 to 500',
+        '501 to 750',
+        '751 to 1000',
     ];
 
     const sortOptions = [
@@ -135,7 +139,7 @@ const AllRooms = () => {
                         
                         <div className = 'md:w-1/2 flex flex-col gap-2'>
                             <p className = 'text-gray-500'>{ room.hotel.city }</p>
-                            <p onClick = {() => { navigate(`/rooms/${room._id}`); scrollTo(0, 0)}} className = 'text-gray-800 text-3xl font-mali cursor-pointer'>{ room.hotel.name }</p>
+                            <p onClick = {() => { navigate(`/rooms/${room._id}`); scrollTo(0, 0)}} className = 'text-gray-800 text-3xl font-mali cursor-pointer'>{ room.roomType }</p>
 
                             <div className = 'flex items-center'>
                                 <StarRating />
@@ -158,7 +162,7 @@ const AllRooms = () => {
                                 </div>
 
                             {/* Room Price per Night */}
-                                <p className = 'text-xl font-mali text-gray-700'>${ room.pricePerNight } / night</p>
+                                <p className = 'text-xl font-mali text-gray-700'>{ currency } { room.pricePerNight } / night</p>
                         </div>
                     </div>
                 ))}

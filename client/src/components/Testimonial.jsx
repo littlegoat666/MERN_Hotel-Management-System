@@ -5,7 +5,7 @@ import StarRating from './StarRating'
 
 const Testimonial = () => {
     return (
-        <div className = 'flex flex-col items-center px-6 md:px-16 lg:px-24 bg-slate-50 pt-20 pb-30'>
+        <div className = 'flex flex-col items-center px-6 md:px-16 lg:px-24 bg-slate-50 pt-20 pb-10'>
             <Title title = 'What Our Guests Say' subTitle = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.' />
             
             <div className = 'flex flex-wrap items-center gap-6 mt-20'>
