@@ -8,7 +8,7 @@ const ExclusiveOffers = () => {
         <div className = 'flex flex-col items-center px-6 md:px-16 lg:px-24 xl:px-32 pt-20 pb-30'>
             
             <div className = 'flex flex-col md:flex-row items-center justify-between w-full'>
-                <Title align = 'left' title = 'Our Exclusive Offers' subTitle = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.' />
+                <Title align = 'left' title = 'Our Exclusive Offers' subTitle = "The offer cards are sample content for this website prototype, not confirmed promotions from Bupatara Chiangmai. Confirm actual rates and availability before booking." />
                 <button className = 'group flex items-center gap-2 font-mali cursor-pointer max-md:mt-12'>
                     View All Offers
                     <img src = { assets.arrowIcon } alt = 'arrow-icon' className = 'group-hover:translate-x-1 transition-all' />

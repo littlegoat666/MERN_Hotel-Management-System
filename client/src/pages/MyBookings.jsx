@@ -50,8 +50,7 @@ const MyBookings = () => {
 
     return (
         <div className = 'py-28 md:pb-35 md:pt-32 px-4 md:px-16 lg:px-24 xl:px-32'>
-            <Title title = 'My Bookings' subTitle = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s' align = 'left' />
-
+            <Title title = 'My Bookings' subTitle = "Review your upcoming and previous stays, including check-in and check-out dates, guest details, booking totals, and payment status." align = 'left' />
             <div className = 'max-w-6xl mt-8 w-full text-gray-800'>
                 <div className = 'hidden md:grid md:grid-cols-[3fr_2fr_1fr] w-full border-b border-gray-300 font-mali text-base py-3'>
                     <div className = 'w-1/3'> Rooms </div>

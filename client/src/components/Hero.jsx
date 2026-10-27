@@ -40,8 +40,7 @@ const Hero = () => {
         <div className = 'font-mali flex flex-col items-start justify-center px-6 md:px-16 lg:px-24 xl:px-32 text-black bg-[url("/src/assets/backgroundImage.png")] bg-no-repeat bg-cover bg-center h-screen'>
             <p className = 'bg-[#49B9FF]/50 px-3.5 py-1 rounded-full mt-20'> The Ultimate Hotel Experience </p>
             <h1 className = 'font-mali text-2xl md:text-5xl md:text-[56px] md:leading-14px font-mali md:font-mali max-w-xl mt-4'> Discover Your Perfect Hotel Rooms </h1>
-            <p className = 'font-mali max-w-130 mt-2 text-sm md:text-base'> Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s </p>
-
+            <p className = 'font-mali max-w-130 mt-2 text-sm md:text-base'> Discover Bupatara Chiangmai, a practical base in Chiang Mai's historic Old City. Explore nearby temples, local markets, and walking streets, then choose a room that fits your trip. </p>
             <form onSubmit = { onSearch } className = 'bg-white text-black-500 rounded-lg px-6 py-4 mt-8 flex flex-col md:flex-row max-md:items-start gap-4 max-md:mx-auto'>
 
                 <div>

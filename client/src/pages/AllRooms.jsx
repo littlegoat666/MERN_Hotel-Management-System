@@ -130,7 +130,7 @@ const AllRooms = () => {
             <div>
                 <div className = 'flex flex-col items-start text-left'>
                     <h1 className = 'font-mali text-4xl md:text-[40px]'> Hotel Rooms </h1>
-                    <p className = 'text-sm md:text-base text-gray-500/90 mt-2 max-w-174'> Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. </p>
+                    <p className = 'text-sm md:text-base text-gray-500/90 mt-2 max-w-174'> Explore the room options listed for Bupatara Chiangmai in the Old City. Compare room types, nightly rates, and listed amenities to find an option that suits your visit. </p>
                 </div>
 
                 { filteredRooms.map((room) => (

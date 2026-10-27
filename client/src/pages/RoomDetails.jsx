@@ -174,7 +174,7 @@ const RoomDetails = () => {
             </div>
         
         <div className = 'max-w-3xl border-y border-gray-300 my-15 py-10 text-gray-500'>
-            <p> Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popular in the 1960s with the release of Let sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Ald PageMaker including versions of Lorem Ipsum. </p>
+            <p> Bupatara Chiangmai is in Chiang Mai's historic Old City, a convenient area for exploring local temples, markets, and walking streets. Room facilities can vary, so review the details for your selected room before booking. </p>
         </div>
         
         {/* Hosted By */}

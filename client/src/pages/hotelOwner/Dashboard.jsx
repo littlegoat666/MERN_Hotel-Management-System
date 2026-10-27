@@ -36,8 +36,7 @@ const Dashboard = () => {
 
     return (
         <div>
-            <Title align = 'left' font = 'outfit' title = 'Dashboard' subTitle = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s' />
-            
+            <Title align = 'left' font = 'outfit' title = 'Dashboard' subTitle = "Monitor Bupatara Chiangmai's room listings, booking activity, and revenue using the latest data available in your dashboard." />
             <div className = 'flex gap-4 my-8'>
 
                 {/* --- Total Bookings --- */}

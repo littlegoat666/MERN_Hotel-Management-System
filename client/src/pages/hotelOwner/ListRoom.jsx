@@ -45,7 +45,7 @@ const ListRoom = () => {
     
     return (
         <div>
-            <Title align = 'left' font = 'outfit' title = 'Room Listing' subTitle = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s' />
+            <Title align = 'left' font = 'outfit' title = 'Room Listing' subTitle = "Manage Bupatara Chiangmai's room listings. Review room types, nightly rates, photos, and listed amenities to keep each listing accurate." />
             <p className = 'text-gray-500 mt-8'> All Rooms </p>
             
             <div className = 'w-full max-w-3xl text-left border border-gray-300 rounded-lg max-h-80 overflow-y-scroll mt-3'>

@@ -96,8 +96,7 @@ const AddRoom = () => {
 
     return (
         <form onSubmit={ onSubmitHandler }>
-            <Title align = 'left' font = 'outfit' title = 'Add Room' subTitle = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s' />
-
+            <Title align = 'left' font = 'outfit' title = 'Add Room' subTitle = "Add a room listing for Bupatara Chiangmai. Upload clear room photos, set the nightly rate, and select only the amenities available for that room." />
             {/* Upload Area For Images */}
                 <p className = 'text-gray-800 mt-10'> Images </p>
             <div className = 'grid grid-cols-2 sm:flex gap-4 my-2 flex-wrap'>

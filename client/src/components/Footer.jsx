@@ -9,7 +9,7 @@ const Footer = () => {
                     <img src = { assets.logo } alt = 'logo' className = 'mb-4 h-8 md:h-9 opacity-80' />
                     
                     <p className = 'text-sm'>
-                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text
+                        Bupatara Chiangmai is located in Chiang Mai's Old City, near Chiang Mai Gate, Wat Chedi Luang, and local walking streets. Review your room details and booking conditions before arrival.
                     </p>
 
                     <div className = 'flex items-center gap-3 mt-4'>
