@@ -22,6 +22,26 @@ const MyBookings = () => {
         }
     }
 
+    const handlePayment = async (bookingId) => {
+        try {
+            const token = await getToken()
+            if (!token) {
+                toast.error('Please sign in again')
+                return
+            }
+
+            const { data } = await axios.post('/api/bookings/stripe-payment', { bookingId }, { headers: { Authorization: `Bearer ${ token }` } })
+
+            if (data.success && data.url) {
+                window.location.href = data.url
+            } else {
+                toast.error(data.message)
+            }
+        } catch (error) {
+            toast.error(error.response?.data?.message || error.message)
+        }
+    }
+
     useEffect(() => {
         if (user) {
             fetchUserBookings()
@@ -46,9 +66,7 @@ const MyBookings = () => {
                             <div className = 'flex flex-col md:flex-row'>
                                 <img src = { booking.room.images[0] } alt = 'hotel-img' className = 'md:w-44 rounded shadow object-cover' />
                                 <div className = 'flex flex-col gap-1.5 max-md:mt-3 md:ml-4'>
-                                    <p className = 'font-mali text-2xl'>{ booking.hotel.name }
-                                        <span className = 'font-mali text-sm'> ({ booking.room.roomType })</span>
-                                    </p>
+                                    <p className = 'font-mali text-2xl'>{ booking.room.roomType }</p>
 
                                     <div className = 'flex items-center gap-1 text-sm text-gray-500'>
                                         <img src = { assets.locationIcon } alt = 'hotel-img' />
@@ -57,7 +75,7 @@ const MyBookings = () => {
 
                                     <div className = 'flex items-center gap-1 text-sm text-gray-500'>
                                         <img src = { assets.guestsIcon } alt = 'guests-icon' />
-                                        <span> Guests: { booking.guests } </span>
+                                        <span> Guests: { booking.guests } (Adults: { booking.adults ?? booking.guests }, Children: { booking.children ?? 0 }) </span>
                                     </div>
 
                                     <p className = 'text-base'> Total: { currency } { booking.totalPrice } </p>
@@ -90,7 +108,7 @@ const MyBookings = () => {
                                     </p>
                                 </div>
                                 {!booking.isPaid && (
-                                    <button className = 'px-4 py-1.5 mt-4 text-xs border border-gray-400 rounded-full hover:bg-gray-50 transition-all cursor-pointer'>
+                                    <button onClick = { () => handlePayment(booking._id)} className = 'px-4 py-1.5 mt-4 text-xs border border-gray-400 rounded-full hover:bg-gray-50 transition-all cursor-pointer'>
                                         Pay Now
                                     </button>
                                 )}
