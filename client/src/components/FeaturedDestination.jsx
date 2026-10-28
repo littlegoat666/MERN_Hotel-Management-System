@@ -9,7 +9,7 @@ const FeaturedDestination = () => {
     return rooms.length > 0 && (
         <div className = 'flex flex-col items-center px-6 md:px-16 lg:px-24 bg-slate-50 py-20'>
 
-            <Title title = 'Our recommend rooms' subTitle = 'Explore our top-rated hotels in popular destinations' />
+            <Title title = 'Our recommend rooms' subTitle = 'Explore our top-rated rooms in popular stay' />
 
             <div className = 'grid w-full max-w-6xl grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-10'>
                 { rooms.slice(0, 4).map((room, index) => (

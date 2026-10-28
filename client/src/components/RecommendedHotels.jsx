@@ -20,7 +20,7 @@ const RecommendedHotels = () => {
     return recommended.length > 0 && (
         <div className = 'flex flex-col items-center px-6 md:px-16 lg:px-24 bg-slate-50 py-20'>
 
-            <Title title = 'Our recommend hotels' subTitle = 'Explore our top-rated hotels in popular destinations' />
+            <Title title = 'Our recommend hotels' subTitle = 'Explore our top-rated rooms in popular stay' />
 
             <div className = 'flex flex-wrap items-center justify-center gap-6 mt-20'>
                 { recommended.slice(0, 4).map((room, index) => (
