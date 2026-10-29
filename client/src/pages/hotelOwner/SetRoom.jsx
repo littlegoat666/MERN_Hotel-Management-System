@@ -3,7 +3,7 @@ import Title from '../../components/Title'
 import { useAppContext } from '../../context/AppContext'
 import toast from 'react-hot-toast'
 
-const ListRoom = () => {
+const SetRoom = () => {
     
     const [ rooms, setRooms ] = useState([])
     const { axios, getToken, user, currency } = useAppContext()
@@ -45,7 +45,7 @@ const ListRoom = () => {
     
     return (
         <div>
-            <Title align = 'left' font = 'outfit' title = 'Room Listing' subTitle = "Manage Bupatara Chiangmai's room listings. Review room types, nightly rates, photos, and listed amenities to keep each listing accurate." />
+            <Title align = 'left' font = 'outfit' title = 'Room Availability' subTitle = "View room availability and switch each room on or off." />
             <p className = 'text-gray-500 mt-8'> All Rooms </p>
             
             <div className = 'w-full max-w-3xl text-left border border-gray-300 rounded-lg max-h-80 overflow-y-scroll mt-3'>
@@ -92,4 +92,4 @@ const ListRoom = () => {
     )
 }
 
-export default ListRoom
+export default SetRoom
