@@ -109,19 +109,17 @@ const AddRoom = () => {
             </div>
 
             <div className = 'w-full flex max-sm:flex-col sm:gap-4 mt-4'>
-                <div className = 'flex-1 max-w-48'>
-                    <p className = 'text-gray-800 mt-4'> Room Type </p>
-                    <select value = { inputs.roomType } onChange = { e => setInputs({...inputs, roomType: e.target.value})} className = 'border opacity-70 border-gray-300 mt-1 rounded p-2 w-full' >
-                        <option value = ''> Select Room Type </option>
-                        <option value = 'Standard Room'> Standard Room </option>
-                        <option value = 'Standard Double'> Standard Double </option>
-                        <option value = 'Superior Room'> Superior Room </option>
-                        <option value = 'Superior Double'> Superior Double </option>
-                        <option value = 'Deluxe Room'> Deluxe Room </option>
-                        <option value = 'Deluxe Double'> Deluxe Double </option>
-                        <option value = 'Junior Suite'> Junior Suite </option>
-                        <option value = 'Family Suite'> Family Suite </option>
-                    </select>
+                <div className = 'flex-1 max-w-64'>
+                    <p className = 'text-gray-800 mt-4'> Room Name </p>
+                    <input
+                        type = 'text'
+                        placeholder = 'e.g. Deluxe Mountain View'
+                        value = { inputs.roomType }
+                        onChange = { e => setInputs({...inputs, roomType: e.target.value})}
+                        className = 'border border-gray-300 mt-1 rounded p-2 w-full'
+                        maxLength = { 100 }
+                        required
+                    />
                 </div>
 
                 <div>

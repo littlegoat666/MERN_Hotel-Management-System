@@ -1,10 +1,12 @@
 // Get/api/user
     export const getUserData = async (req, res) => {
         try {
-            const role = req.user.role;
-            const recentSearchedCities = req.user.recentSearchedCities;
-            res.json({ success: true, role, recentSearchedCities })
+            const ownerEmail = process.env.OWNER_EMAIL?.trim().toLowerCase()
+            const userEmail = req.user.email?.trim().toLowerCase()
+            const role = ownerEmail && userEmail === ownerEmail ? 'hotelOwner' : req.user.role
+            const recentSearchedCities = req.user.recentSearchedCities
 
+            res.json({ success: true, role, recentSearchedCities })
         } catch (error) {
             res.json({ success: false, message: error.message })
         }

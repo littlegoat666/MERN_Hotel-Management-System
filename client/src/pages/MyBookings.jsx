@@ -8,6 +8,7 @@ const MyBookings = () => {
 
     const { axios, getToken, user, currency } = useAppContext()
     const [ bookings, setBookings ] = useState([])
+    const [ cancellingBookingId, setCancellingBookingId ] = useState(null)
 
     const fetchUserBookings = async () => {
         try {
@@ -39,6 +40,35 @@ const MyBookings = () => {
             }
         } catch (error) {
             toast.error(error.response?.data?.message || error.message)
+        }
+    }
+
+    const handleCancelBooking = async (bookingId) => {
+        if (!window.confirm('Are you sure you want to cancel this booking? This action cannot be undone.')) return
+
+        try {
+            setCancellingBookingId(bookingId)
+
+            const token = await getToken()
+            if (!token) {
+                toast.error('Please sign in again')
+                return
+            }
+
+            const { data } = await axios.delete(`/api/bookings/${bookingId}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            })
+
+            if (data.success) {
+                toast.success('Booking cancelled successfully')
+                await fetchUserBookings()
+            } else {
+                toast.error(data.message)
+            }
+        } catch (error) {
+            toast.error(error.response?.data?.message || error.message)
+        } finally {
+            setCancellingBookingId(null)
         }
     }
 
@@ -107,9 +137,15 @@ const MyBookings = () => {
                                     </p>
                                 </div>
                                 {!booking.isPaid && (
-                                    <button onClick = { () => handlePayment(booking._id)} className = 'px-4 py-1.5 mt-4 text-xs border border-gray-400 rounded-full hover:bg-gray-50 transition-all cursor-pointer'>
-                                        Pay Now
-                                    </button>
+                                    <>
+                                        <button onClick = {() => handlePayment(booking._id)} className = 'px-4 py-1.5 mt-4 text-xs border border-gray-400 rounded-full hover:bg-gray-50 transition-all cursor-pointer'>
+                                            Pay Now
+                                        </button>
+
+                                        <button onClick = {() => handleCancelBooking(booking._id)} disabled = {cancellingBookingId === booking._id} className = 'px-4 py-1.5 mt-2 text-xs border border-red-300 text-red-600 rounded-full hover:bg-red-50 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed'>
+                                            { cancellingBookingId === booking._id ? 'Cancelling...' : 'Cancel Booking' }
+                                        </button>
+                                    </>
                                 )}
                             </div>
                     </div>

@@ -64,19 +64,23 @@ const Navbar = () => {
             <div className = 'hidden md:flex items-center gap-3 lg:gap-4 shrink-0'>
                 <label className = 'flex items-center gap-1 text-sm text-gray-700' title = 'Language selection preview; translations are not connected yet'>
                     <span className = 'sr-only'>Choose language</span>
-                    <select value = { selectedLanguage } onChange = {(event) => setSelectedLanguage(event.target.value)} aria-label = 'Choose language (preview only)' className = 'max-w-28 cursor-pointer rounded-lg border border-gray-200 bg-white/70 px-2 py-2 text-sm outline-none focus:border-blue-500'>
+                    <select value = { selectedLanguage } onChange = {(event) => setSelectedLanguage(event.target.value)} aria-label = 'Choose language (preview only)' className = 'max-w-28 cursor-pointer rounded-lg border border-gray-400 bg-white px-2 py-2 text-sm text-gray-900 outline-none focus:border-blue-600'>
                         { languageOptions }
                     </select>
                 </label>
 
-                { user && isOwner && <button className = 'rounded-full border border-gray-300 px-4 py-2 text-sm font-medium text-gray-800 transition hover:border-blue-600 hover:text-blue-600' onClick = {() => navigate('/owner')}>Dashboard</button> }
+                { user && (
+                    <button className = 'rounded-full border border-gray-500 bg-white px-4 py-2 text-sm font-medium text-gray-900 transition hover:border-blue-600 hover:text-blue-600' onClick = {() => navigate(isOwner ? '/owner' : '/my-bookings')}>
+                        { isOwner ? 'Dashboard' : 'My Booking' }
+                    </button>
+                )}
 
-                <img src = { assets.searchIcon } alt = '' aria-hidden = 'true' className = {`${ isScrolled ? 'invert-0' : ''} h-6 w-6 opacity-80`} />
+                <img src = { assets.searchIcon } alt = '' aria-hidden = 'true' className = 'h-6 w-6 brightness-0 opacity-90' />
                 { user ? (
                     <UserButton>
-                        <UserButton.MenuItems>
+                        { isOwner && <UserButton.MenuItems>
                             <UserButton.Action label = 'My Booking' labelIcon = {<BookIcon />} onClick = {() => navigate('/my-bookings')} />
-                        </UserButton.MenuItems>
+                        </UserButton.MenuItems> }
                     </UserButton>
                 ) : (
                     <button onClick = { openSignIn } className = 'rounded-full bg-black px-5 py-2.5 text-sm text-white transition hover:bg-gray-800'>Login</button>
@@ -86,12 +90,14 @@ const Navbar = () => {
             {/* Mobile controls */}
             <div className = 'flex items-center gap-3 md:hidden'>
                 { user && <UserButton>
-                    <UserButton.MenuItems>
-                        <UserButton.Action label = 'My Booking' labelIcon = {<BookIcon />} onClick = {() => navigate('/my-bookings')} />
-                    </UserButton.MenuItems>
+                    { isOwner && (
+                        <UserButton.MenuItems>
+                            <UserButton.Action label = 'My Booking' labelIcon = {<BookIcon />} onClick = {() => navigate('/my-bookings')} />
+                        </UserButton.MenuItems>
+                    )}
                 </UserButton> }
                 <button type = 'button' onClick = {() => setIsMenuOpen(!isMenuOpen)} aria-label = { isMenuOpen ? 'Close navigation menu' : 'Open navigation menu' } aria-expanded = { isMenuOpen } className = 'rounded-md p-2'>
-                    <img src = { isMenuOpen ? assets.closeMenu : assets.menuIcon } alt = '' className = 'h-5 w-5' />
+                    <img src = { isMenuOpen ? assets.closeMenu : assets.menuIcon } alt = '' className = 'h-5 w-5 brightness-0' />
                 </button>
             </div>
 
@@ -104,14 +110,19 @@ const Navbar = () => {
                     </Link>
                 ))}
 
-                <label className = 'flex items-center gap-2 text-sm text-gray-700' title = 'Language selection preview; translations are not connected yet'>
+                <label className = 'flex items-center gap-2 text-sm font-medium text-gray-900' title = 'Language selection preview; translations are not connected yet'>
                     <span>Language</span>
-                    <select value = { selectedLanguage } onChange = {(event) => setSelectedLanguage(event.target.value)} aria-label = 'Choose language (preview only)' className = 'rounded-lg border border-gray-200 bg-white px-3 py-2 outline-none focus:border-blue-500'>
+                    <select value = { selectedLanguage } onChange = {(event) => setSelectedLanguage(event.target.value)} aria-label = 'Choose language (preview only)' className = 'rounded-lg border border-gray-400 bg-white px-3 py-2 text-gray-900 outline-none focus:border-blue-600'>
                         { languageOptions }
                     </select>
                 </label>
 
-                { user && isOwner && <button className = 'rounded-full border border-gray-300 px-5 py-2 text-sm font-medium' onClick = {() => { setIsMenuOpen(false); navigate('/owner') }}>Owner Dashboard</button> }
+                { user && (
+                    <button className = 'rounded-full border border-gray-500 bg-white px-5 py-2 text-sm font-medium text-gray-900 transition hover:border-blue-600 hover:text-blue-600' onClick = {() => { setIsMenuOpen(false); navigate(isOwner ? '/owner' : '/my-bookings') }}>
+                        { isOwner ? 'Dashboard' : 'My Booking' }
+                    </button>
+                )}
+
                 { !user && <button onClick = {() => { setIsMenuOpen(false); openSignIn() }} className = 'rounded-full bg-black px-8 py-2.5 text-white'>Login</button> }
             </div>
         </nav>

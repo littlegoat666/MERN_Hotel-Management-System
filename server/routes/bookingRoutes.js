@@ -2,6 +2,7 @@ import express from 'express';
 import {
     checkAvailabilityAPI,
     createBooking,
+    cancelBooking,
     getHotelBookings,
     getUserBookings,
     stripePayment
@@ -16,5 +17,6 @@ bookingRouter.get('/user', protect, getUserBookings);
 bookingRouter.get('/hotel', protect, getHotelBookings);
 
 bookingRouter.post('/stripe-payment', protect, stripePayment);
+bookingRouter.delete('/:bookingId', protect, cancelBooking);
 
 export default bookingRouter;

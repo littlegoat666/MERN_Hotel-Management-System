@@ -4,10 +4,13 @@ import { NavLink } from 'react-router-dom';
 
 const Sidebar = () => {
     
+    
     const sidebarLinks = [
         { name: 'Dashboard', path: '/owner', icon: assets.dashboardIcon },
         { name: 'Add Room', path: '/owner/add-room', icon: assets.addIcon },
         { name: 'Set Room', path: '/owner/set-room', icon: assets.listIcon },
+        { name: 'Edit Room', path: '/owner/edit-room', icon: assets.listIcon },
+        { name: 'Delete Room', path: '/owner/delete-room', icon: assets.closeIcon },
     ]
     
     return (

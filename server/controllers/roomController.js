@@ -2,6 +2,7 @@ import Hotel from '../models/Hotel.js';
 import { v2 as cloudinary } from 'cloudinary';
 import Room from '../models/Room.js';
 import { populate } from 'dotenv';
+import Booking from '../models/Booking.js'
 
     // API to create a new room for a hotel
 export const createRoom = async (req, res) => {
@@ -20,8 +21,9 @@ export const createRoom = async (req, res) => {
             // Wait for all uploads to complete
         const images = await Promise.all(uploadImages)
 
-        await Room.create ({
+        await Room.create({
             hotel: hotel._id,
+            hotelName: hotel.name,
             roomType,
             pricePerNight: +pricePerNight,
             amenities: JSON.parse(amenities),
@@ -74,5 +76,161 @@ export const toggleRoomAvailability = async (req, res) => {
 
     } catch (error) {
         res.json({ success: false, message: error.message });
+    }
+}
+
+export const updateRoom = async (req, res) => {
+    try {
+        const hotel = await Hotel.findOne({ owner: req.auth.userId })
+
+        if (!hotel) {
+            return res.status(403).json({ success: false, message: 'Hotel owner not found' })
+        }
+
+        const room = await Room.findOne({
+            _id: req.params.roomId,
+            hotel: hotel._id.toString()
+        })
+
+        if (!room) {
+            return res.status(404).json({ success: false, message: 'Room not found or access denied' })
+        }
+
+        const roomType = String(req.body.roomType || '').trim()
+        const pricePerNight = Number(req.body.pricePerNight)
+
+        if (!roomType) {
+            return res.status(400).json({ success: false, message: 'Room name is required' })
+        }
+
+        if (!Number.isFinite(pricePerNight) || pricePerNight <= 0) {
+            return res.status(400).json({ success: false, message: 'Please enter a valid room price' })
+        }
+
+        let amenities
+        let requestedKeptImages
+
+        try {
+            amenities = JSON.parse(req.body.amenities)
+            requestedKeptImages = req.body.keptImages === undefined
+                ? (room.images || [])
+                : JSON.parse(req.body.keptImages)
+        } catch {
+            return res.status(400).json({ success: false, message: 'Invalid amenities or image data' })
+        }
+
+        if (!Array.isArray(amenities) || !Array.isArray(requestedKeptImages)) {
+            return res.status(400).json({ success: false, message: 'Invalid amenities or image data' })
+        }
+
+        const existingImages = Array.isArray(room.images) ? room.images : []
+        const keptImages = [...new Set(
+            requestedKeptImages.filter(image => typeof image === 'string' && existingImages.includes(image))
+        )]
+        const files = req.files || []
+
+        if (keptImages.length + files.length > 4) {
+            return res.status(400).json({ success: false, message: 'A room can have up to 4 images' })
+        }
+
+        if (keptImages.length + files.length === 0) {
+            return res.status(400).json({ success: false, message: 'Please keep or upload at least one room image' })
+        }
+
+        const uploadedImages = await Promise.all(files.map(async file => {
+            const result = await cloudinary.uploader.upload(file.path)
+            return result.secure_url
+        }))
+
+        room.roomType = roomType
+        room.pricePerNight = pricePerNight
+        room.amenities = amenities.filter(item => typeof item === 'string').map(item => item.trim()).filter(Boolean)
+        room.images = [...keptImages, ...uploadedImages]
+
+        await room.save()
+
+        return res.json({ success: true, message: 'Room updated successfully', room })
+    } catch (error) {
+        console.error('Update room error:', error.message)
+        return res.status(500).json({ success: false, message: 'Failed to update room' })
+    }
+}
+
+
+// Check Booking impact before room deletion
+export const getRoomBookingImpact = async (req, res) => {
+    try {
+        const hotel = await Hotel.findOne({ owner: req.auth.userId })
+
+        if (!hotel) {
+            return res.status(403).json({ success: false, message: 'Hotel owner not found' })
+        }
+
+        const room = await Room.findOne({
+            _id: req.params.roomId,
+            hotel: hotel._id.toString()
+        })
+
+        if (!room) {
+            return res.status(404).json({ success: false, message: 'Room not found or access denied' })
+        }
+
+        const bookings = await Booking.find({ room: room._id.toString() })
+            .select('_id checkInDate checkOutDate guests adults children totalPrice isPaid status createdAt')
+            .sort({ createdAt: -1 })
+            .lean()
+
+        return res.json({
+            success: true,
+            roomId: room._id,
+            bookingCount: bookings.length,
+            bookings
+        })
+    } catch (error) {
+        console.error('Check room booking impact error:', error.message)
+        return res.status(500).json({ success: false, message: 'Failed to check booking impact' })
+    }
+}
+
+
+// Delete a room only if no Booking records reference it
+export const deleteRoom = async (req, res) => {
+    try {
+        const hotel = await Hotel.findOne({ owner: req.auth.userId })
+
+        if (!hotel) {
+            return res.status(403).json({ success: false, message: 'Hotel owner not found' })
+        }
+
+        const room = await Room.findOne({
+            _id: req.params.roomId,
+            hotel: hotel._id.toString()
+        })
+
+        if (!room) {
+            return res.status(404).json({ success: false, message: 'Room not found or access denied' })
+        }
+
+        // Check again on the server immediately before deletion
+        const bookings = await Booking.find({ room: room._id.toString() })
+            .select('_id checkInDate checkOutDate guests adults children totalPrice isPaid status createdAt')
+            .sort({ createdAt: -1 })
+            .lean()
+
+        if (bookings.length > 0) {
+            return res.status(409).json({
+                success: false,
+                message: `This room cannot be deleted because ${bookings.length} Booking record(s) reference it. Set the room to unavailable instead.`,
+                bookingCount: bookings.length,
+                bookings
+            })
+        }
+
+        await Room.deleteOne({ _id: room._id })
+
+        return res.json({ success: true, message: 'Room deleted successfully' })
+    } catch (error) {
+        console.error('Delete room error:', error.message)
+        return res.status(500).json({ success: false, message: 'Failed to delete room' })
     }
 }
