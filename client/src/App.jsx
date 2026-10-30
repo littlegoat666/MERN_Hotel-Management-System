@@ -19,6 +19,7 @@ import AddRoom from './pages/hotelOwner/AddRoom'
 import SetRoom from './pages/hotelOwner/SetRoom.jsx'
 import EditRoom from './pages/hotelOwner/EditRoom'
 import DeleteRoom from './pages/hotelOwner/DeleteRoom'
+import ExportReports from './pages/hotelOwner/ExportReports'
 
 import { Toaster } from 'react-hot-toast'
 import { useAppContext } from './context/AppContext.jsx'
@@ -53,6 +54,7 @@ const App = () => {
                         <Route path = 'set-room' element = { <SetRoom /> } />
                         <Route path = 'edit-room' element = { <EditRoom /> } />
                         <Route path = 'delete-room' element = { <DeleteRoom /> } />
+                        <Route path = 'export-reports' element = { <ExportReports /> } />
                     </Route>
 
                 </Routes>
