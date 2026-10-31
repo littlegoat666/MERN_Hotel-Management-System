@@ -1,102 +1,62 @@
 import React, { useEffect, useState } from 'react'
+import {
+    FileSpreadsheet, Download, CalendarDays, Users, UserRoundX,
+    Wallet, ClipboardList, Filter, Search, RotateCcw, CalendarRange,
+    TrendingUp, Clock3, BedDouble, ChevronLeft, ChevronRight,
+} from 'lucide-react'
 import { useAppContext } from '../../context/AppContext'
 
-const defaultFilters = {
-    dateField: 'bookingDate',
-    startDate: '',
-    endDate: '',
-    paymentStatus: 'all',
-    roomType: 'all',
-    search: '',
-}
+const defaultFilters = { dateField: 'checkInDate', startDate: '', endDate: '', paymentStatus: 'all', roomType: 'all', search: '' }
+const getParams = (filters) => Object.fromEntries(Object.entries(filters).filter(([, value]) => value !== '' && value !== 'all' && value !== undefined))
+const formatNumber = (value) => Number(value || 0).toLocaleString('en-US')
+const formatMoney = (value, currency) => `${currency} ${Number(value || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+const formatDate = (value) => value ? new Date(value).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', timeZone: 'Asia/Bangkok' }) : '-'
+const paymentStyle = (status) => status === 'Paid' ? 'bg-[#e3f4e7] text-[#258047] ring-[#bde2c6]' : 'bg-[#fde8e7] text-[#bd3f3c] ring-[#f3c7c4]'
 
-const getParams = (selectedFilters) => {
-    const params = { ...selectedFilters }
-
-    Object.keys(params).forEach((key) => {
-        if (
-            params[key] === '' ||
-            params[key] === 'all' ||
-            params[key] === undefined
-        ) {
-            delete params[key]
-        }
-    })
-
-    return params
-}
-
-const formatMoney = (value, currency) => {
-    return `${currency} ${Number(value || 0).toLocaleString('en-US', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-    })}`
-}
-
-const formatDate = (value) => {
-    if (!value) return '-'
-
-    return new Date(value).toLocaleDateString('en-GB', {
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric',
+const getBangkokDateParts = (value) => {
+    const parts = new Intl.DateTimeFormat('en-US', {
         timeZone: 'Asia/Bangkok',
-    })
-}
+        year: 'numeric',
+        month: 'numeric',
+    }).formatToParts(new Date(value))
 
-const getStatusStyle = (status) => {
-    switch (status) {
-        case 'Paid':
-            return 'bg-emerald-50 text-emerald-700 ring-emerald-200'
-
-        case 'Unpaid':
-            return 'bg-amber-50 text-amber-700 ring-amber-200'
-
-        case 'Cancelled':
-            return 'bg-rose-50 text-rose-700 ring-rose-200'
-
-        case 'Refund':
-            return 'bg-violet-50 text-violet-700 ring-violet-200'
-
-        default:
-            return 'bg-slate-50 text-slate-600 ring-slate-200'
+    return {
+        year: Number(parts.find((part) => part.type === 'year')?.value),
+        month: Number(parts.find((part) => part.type === 'month')?.value),
     }
 }
 
+const sumBookings = (bookings) => bookings.reduce((total, booking) => total + Number(booking.totalPrice || 0), 0)
+
 const ExportReports = () => {
     const { axios, getToken, currency, toast } = useAppContext()
-
     const [report, setReport] = useState(null)
     const [filters, setFilters] = useState(defaultFilters)
     const [activeFilters, setActiveFilters] = useState(defaultFilters)
-
     const [loading, setLoading] = useState(true)
     const [exporting, setExporting] = useState(false)
+    const [currentPage, setCurrentPage] = useState(1)
+
+    const itemsPerPage = 10
 
     const fetchReport = async (selectedFilters = defaultFilters) => {
         try {
             setLoading(true)
 
-            const token = await getToken()
-
             const { data } = await axios.get('/api/reports', {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
+                headers: { Authorization: `Bearer ${await getToken()}` },
                 params: getParams(selectedFilters),
             })
 
             if (data.success) {
                 setReport(data)
                 setActiveFilters({ ...selectedFilters })
+                setCurrentPage(1)
             } else {
                 toast.error(data.message || 'Failed to load reports')
             }
-
         } catch (error) {
-            toast.error(
-                error.response?.data?.message || error.message || 'Failed to load reports'
-            )
+            toast.error(error.response?.data?.message || error.message || 'Failed to load reports')
         } finally {
             setLoading(false)
         }
@@ -106,59 +66,44 @@ const ExportReports = () => {
         fetchReport(defaultFilters)
     }, [])
 
-    const handleFilterChange = (field, value) => {
-        setFilters((previous) => ({
-            ...previous,
-            [field]: value,
-        }))
+    const changeFilter = (field, value) => {
+        setFilters((previous) => ({ ...previous, [field]: value }))
     }
 
-    const handleApplyFilters = (event) => {
+    const applyFilters = (event) => {
         event.preventDefault()
 
-        if (
-            filters.startDate &&
-            filters.endDate &&
-            filters.startDate > filters.endDate
-        ) {
-            toast.error('End date must be after start date')
-            return
+        if (filters.startDate && filters.endDate && filters.startDate > filters.endDate) {
+            return toast.error('End date must be after start date')
         }
 
         fetchReport(filters)
     }
 
-    const handleReset = () => {
+    const resetFilters = () => {
         setFilters(defaultFilters)
         fetchReport(defaultFilters)
     }
 
-    const handleExport = async () => {
+    const downloadExcel = async () => {
         try {
             setExporting(true)
 
-            const token = await getToken()
-
             const response = await axios.get('/api/reports/export', {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
+                headers: { Authorization: `Bearer ${await getToken()}` },
                 params: getParams(activeFilters),
                 responseType: 'blob',
             })
 
-            const file = new Blob(
-                [response.data],
-                {
-                    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                }
-            )
+            const file = new Blob([response.data], {
+                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            })
 
             const url = window.URL.createObjectURL(file)
             const link = document.createElement('a')
 
             link.href = url
-            link.download = `Bupatara_Report_${new Date().toISOString().slice(0, 10)}.xlsx`
+            link.download = `Hotel_Report_${new Date().toISOString().slice(0, 10)}.xlsx`
 
             document.body.appendChild(link)
             link.click()
@@ -167,208 +112,207 @@ const ExportReports = () => {
             window.URL.revokeObjectURL(url)
 
             toast.success('Excel report downloaded successfully')
-
         } catch (error) {
-            toast.error('Failed to export Excel report')
+            toast.error(error.response?.data?.message || 'Failed to export Excel report')
         } finally {
             setExporting(false)
         }
     }
 
-    const summary = report?.summary || {}
+    // ======================================
+    // BOOKING DATA + PAGINATION
+    // ======================================
 
-    const roomTypes = [
-        ...new Set(
-            (report?.rooms || [])
-                .map((room) => room.roomType)
-                .filter(Boolean)
-        ),
-    ]
+    const filteredBookings = report?.bookings || []
+
+    const totalPages = Math.max(1, Math.ceil(filteredBookings.length / itemsPerPage))
+
+    const paginatedBookings = filteredBookings.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    )
+
+    const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1)
+
+    // ======================================
+    // HOTEL OVERVIEW
+    // ======================================
+
+    const paidBookings = filteredBookings.filter((booking) => Boolean(booking.isPaid) || booking.paymentStatus === 'Paid')
+    const unpaidBookings = filteredBookings.filter((booking) => !Boolean(booking.isPaid) && booking.paymentStatus !== 'Paid')
+
+    const bookingValue = sumBookings(filteredBookings)
+    const paidRevenue = sumBookings(paidBookings)
+    const currentPeriod = getBangkokDateParts(new Date())
+
+    const paidBookingsInCurrentYear = paidBookings.filter((booking) => {
+        if (!booking.bookingDate) return false
+        return getBangkokDateParts(booking.bookingDate).year === currentPeriod.year
+    })
+
+    const paidBookingsInCurrentMonth = paidBookings.filter((booking) => {
+        if (!booking.bookingDate) return false
+
+        const bookingPeriod = getBangkokDateParts(booking.bookingDate)
+
+        return bookingPeriod.year === currentPeriod.year && bookingPeriod.month === currentPeriod.month
+    })
+
+    const renterCard = activeFilters.paymentStatus === 'paid'
+        ? {
+            label: 'Paid Current Renters',
+            value: paidBookings.length,
+            note: 'Paid booking records matching filters',
+            icon: Users,
+            color: 'bg-[#e3f4e7] text-[#258047]',
+        }
+        : activeFilters.paymentStatus === 'unpaid'
+            ? {
+                label: 'Unpaid Current Renters',
+                value: unpaidBookings.length,
+                note: 'Unpaid booking records matching filters',
+                icon: UserRoundX,
+                color: 'bg-[#fde8e7] text-[#cf4944]',
+            }
+            : {
+                label: 'Current Renters',
+                value: filteredBookings.length,
+                note: 'Booking records matching filters',
+                icon: Users,
+                color: 'bg-[#e5f2ff] text-[#3884c7]',
+            }
 
     const summaryCards = [
         {
             label: 'Total Bookings',
-            value: summary.totalBookings || 0,
-            description: 'All matching reservations',
-            icon: '▦',
-            theme: 'from-blue-50 to-white border-blue-100 text-blue-700',
-            iconTheme: 'bg-blue-100 text-blue-700',
+            value: formatNumber(filteredBookings.length),
+            note: 'Matching booking records',
+            icon: ClipboardList,
+            color: 'bg-[#fff0df] text-[#d97732]',
         },
         {
-            label: 'Paid Bookings',
-            value: summary.paidBookings || 0,
-            description: 'Successfully paid',
-            icon: '✓',
-            theme: 'from-emerald-50 to-white border-emerald-100 text-emerald-700',
-            iconTheme: 'bg-emerald-100 text-emerald-700',
+            ...renterCard,
+            value: formatNumber(renterCard.value),
         },
         {
-            label: 'Unpaid Bookings',
-            value: summary.unpaidBookings || 0,
-            description: 'Waiting for payment',
-            icon: '◷',
-            theme: 'from-amber-50 to-white border-amber-100 text-amber-700',
-            iconTheme: 'bg-amber-100 text-amber-700',
+            label: 'Total Booking Value',
+            value: formatMoney(bookingValue, currency),
+            note: 'Paid and unpaid bookings',
+            icon: CalendarDays,
+            color: 'bg-[#eee7ff] text-[#8259c4]',
+            money: true,
         },
         {
-            label: 'Cancelled',
-            value: summary.cancelledBookings || 0,
-            description: 'Cancelled reservations',
-            icon: '×',
-            theme: 'from-rose-50 to-white border-rose-100 text-rose-700',
-            iconTheme: 'bg-rose-100 text-rose-700',
+            label: 'Total Revenue',
+            value: formatMoney(paidRevenue, currency),
+            note: 'Paid bookings only',
+            icon: Wallet,
+            color: 'bg-[#e3f4e7] text-[#258047]',
+            money: true,
         },
         {
-            label: 'Refunded',
-            value: summary.refundedBookings || 0,
-            description: 'Refund status records',
-            icon: '↶',
-            theme: 'from-violet-50 to-white border-violet-100 text-violet-700',
-            iconTheme: 'bg-violet-100 text-violet-700',
+            label: 'Annual Revenue',
+            value: formatMoney(sumBookings(paidBookingsInCurrentYear), currency),
+            note: `Paid revenue · ${currentPeriod.year}`,
+            icon: CalendarRange,
+            color: 'bg-[#eee7ff] text-[#8259c4]',
+            money: true,
         },
         {
-            label: 'Paid Revenue',
-            value: formatMoney(summary.paidRevenue, currency),
-            description: 'Excludes refunded and cancelled',
-            icon: '฿',
-            theme: 'from-indigo-50 to-white border-indigo-100 text-indigo-700',
-            iconTheme: 'bg-indigo-100 text-indigo-700',
-            isMoney: true,
+            label: 'Monthly Revenue',
+            value: formatMoney(sumBookings(paidBookingsInCurrentMonth), currency),
+            note: 'Paid revenue · This month',
+            icon: TrendingUp,
+            color: 'bg-[#ffe9dc] text-[#d66b35]',
+            money: true,
         },
     ]
 
+    const roomTypes = [...new Set((report?.rooms || []).map((room) => room.roomType).filter(Boolean))]
+
+    const inputClass = 'w-full rounded-xl border border-[#e8ddd3] bg-[#faf7f3] px-3 py-3 text-sm text-[#63534a] outline-none transition focus:border-[#bf927b] focus:bg-white focus:ring-4 focus:ring-[#f1e4db]'
+
+    // ======================================
+    // RENDER
+    // ======================================
+
     return (
-        <div className = 'w-full space-y-7 pb-10 font-mali'>
+        <div className = 'w-full space-y-7 pb-10 font-mali text-[#302925]'>
 
-            {/* Page Header */}
-            <section className = 'relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-900 p-6 text-white shadow-xl shadow-blue-950/10 md:p-9'>
-
+            <section className = 'relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#493832] via-[#76564b] to-[#a27560] p-6 text-[#fffaf5] shadow-lg shadow-[#76564b]/10 md:p-9'>
                 <div className = 'pointer-events-none absolute -right-16 -top-24 h-72 w-72 rounded-full border border-white/10' />
                 <div className = 'pointer-events-none absolute -right-3 -top-10 h-52 w-52 rounded-full border border-white/10' />
-                <div className = 'pointer-events-none absolute -bottom-28 right-1/4 h-64 w-64 rounded-full bg-blue-500/10 blur-3xl' />
 
                 <div className = 'relative z-10 flex flex-col justify-between gap-6 md:flex-row md:items-center'>
-
                     <div className = 'max-w-2xl'>
-                        <div className = 'mb-4 inline-flex items-center gap-2 rounded-full border border-blue-300/20 bg-white/10 px-3 py-1.5 text-xs font-semibold tracking-wider text-blue-100'>
-                            <span className = 'h-2 w-2 rounded-full bg-emerald-400' />
-                            HOTEL MANAGEMENT · REPORT CENTER
-                        </div>
-
-                        <h1 className = 'text-3xl font-semibold tracking-tight md:text-4xl'>
-                            Export & Reports
-                        </h1>
-
-                        <p className = 'mt-3 max-w-xl text-sm leading-7 text-blue-100/80 md:text-base'>
-                            Review booking activity, monitor payment performance, and export your hotel reports into an organized Excel workbook.
-                        </p>
-
-                        <p className = 'mt-4 text-xs font-medium tracking-wide text-blue-200/70'>
-                            {report?.hotel?.name || 'Bupatara Chiangmai'}
-                            {report?.hotel?.city ? ` · ${report.hotel.city}` : ''}
-                        </p>
+                        <h1 className = 'text-3xl font-semibold tracking-tight md:text-4xl'>Export & Reports</h1>
+                        <p className = 'mt-3 max-w-xl text-sm leading-7 text-[#f1e2d8]/80 md:text-base'>Bookings, guest stays, and paid revenue at a glance.</p>
                     </div>
 
                     <div className = 'flex shrink-0 flex-col gap-2 md:items-end'>
-                        <button
-                            type = 'button'
-                            onClick = { handleExport }
-                            disabled = { loading || exporting || !report }
-                            className = 'inline-flex items-center justify-center gap-3 rounded-xl bg-white px-5 py-3.5 text-sm font-semibold text-blue-950 shadow-lg shadow-black/10 transition hover:-translate-y-0.5 hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50'
-                        >
-                            <span className = 'text-lg'>↓</span>
-                            { exporting ? 'Preparing Excel...' : 'Download Excel' }
+                        <button type = 'button' onClick = {downloadExcel} disabled = {loading || exporting || !report} className = 'inline-flex items-center justify-center gap-3 rounded-xl bg-[#fffaf5] px-5 py-3.5 text-sm font-semibold text-[#76564b] shadow-lg shadow-black/10 transition hover:-translate-y-0.5 hover:bg-white disabled:cursor-not-allowed disabled:opacity-50'>
+                            <Download size = {18} />
+                            {exporting ? 'Preparing Excel...' : 'Download Excel'}
                         </button>
 
-                        <span className = 'text-xs text-blue-100/60'>
-                            .xlsx · 2 worksheets
-                        </span>
+                        <span className = 'text-xs text-[#f1e2d8]/70'>.xlsx · 2 worksheets</span>
                     </div>
-
                 </div>
             </section>
 
-            {/* Summary Cards */}
+            {/* HOTEL OVERVIEW */}
             <section>
                 <div className = 'mb-4 flex flex-wrap items-end justify-between gap-2'>
                     <div>
-                        <h2 className = 'text-lg font-semibold text-slate-800'>
-                            Booking Overview
-                        </h2>
-                        <p className = 'mt-1 text-xs text-slate-500'>
-                            Summary based on your selected filters
-                        </p>
+                        <h2 className = 'text-lg font-semibold text-[#493a34]'>Hotel Overview</h2>
+                        <p className = 'mt-1 text-xs text-[#a09287]'>Summary uses the same booking records shown below after applying Report Filters.</p>
                     </div>
 
-                    {loading && (
-                        <span className = 'text-xs font-medium text-blue-600'>
-                            Updating report...
-                        </span>
-                    )}
+                    {loading && <span className = 'text-xs font-medium text-[#a66f58]'>Updating report...</span>}
                 </div>
 
                 <div className = 'grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3'>
-                    {summaryCards.map((item) => (
-                        <div
-                            key = { item.label }
-                            className = {`relative overflow-hidden rounded-2xl border bg-gradient-to-br p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md ${item.theme}`}
-                        >
-                            <div className = 'flex items-start justify-between gap-3'>
-                                <div>
-                                    <p className = 'text-sm font-semibold opacity-80'>
-                                        {item.label}
-                                    </p>
+                    {summaryCards.map((item) => {
+                        const Icon = item.icon
 
-                                    <p className = {`mt-3 font-semibold tracking-tight ${item.isMoney ? 'text-xl' : 'text-3xl'}`}>
-                                        {item.value}
-                                    </p>
+                        return (
+                            <article key = {item.label} className = 'relative overflow-hidden rounded-2xl border border-[#e9ded5] bg-[#fffdfa] p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md'>
+                                <div className = 'flex items-start justify-between gap-3'>
+                                    <div className = 'min-w-0'>
+                                        <p className = 'text-sm font-semibold text-[#806f64]'>{item.label}</p>
+                                        <p className = {`mt-3 break-words font-semibold tracking-tight text-[#493a34] ${item.money ? 'text-xl' : 'text-3xl'}`}>{item.value}</p>
+                                        <p className = 'mt-2 text-xs text-[#aa9a90]'>{item.note}</p>
+                                    </div>
 
-                                    <p className = 'mt-2 text-xs opacity-60'>
-                                        {item.description}
-                                    </p>
+                                    <span className = {`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ${item.color}`}>
+                                        <Icon size = {22} strokeWidth = {2.1} />
+                                    </span>
                                 </div>
-
-                                <div className = {`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-xl font-semibold ${item.iconTheme}`}>
-                                    {item.icon}
-                                </div>
-                            </div>
-                        </div>
-                    ))}
+                            </article>
+                        )
+                    })}
                 </div>
             </section>
 
-            {/* Filters */}
-            <section className = 'overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm'>
-
-                <div className = 'flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 px-5 py-4 md:px-6'>
+            {/* REPORT FILTERS */}
+            <section className = 'overflow-hidden rounded-2xl border border-[#e9ded5] bg-[#fffdfa] shadow-sm'>
+                <div className = 'flex flex-wrap items-center justify-between gap-3 border-b border-[#eee5de] px-5 py-4 md:px-6'>
                     <div>
-                        <h2 className = 'font-semibold text-slate-800'>
-                            Report Filters
-                        </h2>
-                        <p className = 'mt-1 text-xs text-slate-500'>
-                            Narrow down the bookings you want to review or export.
-                        </p>
+                        <div className = 'flex items-center gap-2'>
+                            <Filter size = {18} className = 'text-[#a66f58]' />
+                            <h2 className = 'font-semibold text-[#493a34]'>Report Filters</h2>
+                        </div>
+                        <p className = 'mt-1 text-xs text-[#a09287]'>Filter records before previewing or downloading the report.</p>
                     </div>
 
-                    <span className = 'rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700'>
-                        Advanced search
-                    </span>
+                    <span className = 'rounded-full bg-[#f5eee8] px-3 py-1 text-xs font-semibold text-[#92705e]'>Advanced Search</span>
                 </div>
 
-                <form onSubmit = { handleApplyFilters } className = 'space-y-5 p-5 md:p-6'>
-
+                <form onSubmit = {applyFilters} className = 'space-y-5 p-5 md:p-6'>
                     <div className = 'grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3'>
-
                         <div>
-                            <label className = 'mb-2 block text-xs font-semibold text-slate-600'>
-                                Date Type
-                            </label>
-
-                            <select
-                                value = { filters.dateField }
-                                onChange = { (event) => handleFilterChange('dateField', event.target.value) }
-                                className = 'w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-sm text-slate-700 outline-none transition focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-100'
-                            >
+                            <label className = 'mb-2 block text-xs font-semibold text-[#806f64]'>Date Type</label>
+                            <select value = {filters.dateField} onChange = {(event) => changeFilter('dateField', event.target.value)} className = {inputClass}>
                                 <option value = 'bookingDate'>Booking Date</option>
                                 <option value = 'checkInDate'>Check-in Date</option>
                                 <option value = 'checkOutDate'>Check-out Date</option>
@@ -376,225 +320,194 @@ const ExportReports = () => {
                         </div>
 
                         <div>
-                            <label className = 'mb-2 block text-xs font-semibold text-slate-600'>
-                                Start Date
-                            </label>
-
-                            <input
-                                type = 'date'
-                                value = { filters.startDate }
-                                onChange = { (event) => handleFilterChange('startDate', event.target.value) }
-                                className = 'w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-sm text-slate-700 outline-none transition focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-100'
-                            />
+                            <label className = 'mb-2 block text-xs font-semibold text-[#806f64]'>Start Date</label>
+                            <input type = 'date' value = {filters.startDate} onChange = {(event) => changeFilter('startDate', event.target.value)} className = {inputClass} />
                         </div>
 
                         <div>
-                            <label className = 'mb-2 block text-xs font-semibold text-slate-600'>
-                                End Date
-                            </label>
-
-                            <input
-                                type = 'date'
-                                value = { filters.endDate }
-                                onChange = { (event) => handleFilterChange('endDate', event.target.value) }
-                                className = 'w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-sm text-slate-700 outline-none transition focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-100'
-                            />
+                            <label className = 'mb-2 block text-xs font-semibold text-[#806f64]'>End Date</label>
+                            <input type = 'date' value = {filters.endDate} onChange = {(event) => changeFilter('endDate', event.target.value)} className = {inputClass} />
                         </div>
 
                         <div>
-                            <label className = 'mb-2 block text-xs font-semibold text-slate-600'>
-                                Payment Status
-                            </label>
-
-                            <select
-                                value = { filters.paymentStatus }
-                                onChange = { (event) => handleFilterChange('paymentStatus', event.target.value) }
-                                className = 'w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-sm text-slate-700 outline-none transition focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-100'
-                            >
-                                <option value = 'all'>All Statuses</option>
+                            <label className = 'mb-2 block text-xs font-semibold text-[#806f64]'>Payment Status</label>
+                            <select value = {filters.paymentStatus} onChange = {(event) => changeFilter('paymentStatus', event.target.value)} className = {inputClass}>
+                                <option value = 'all'>All Payments</option>
                                 <option value = 'paid'>Paid</option>
                                 <option value = 'unpaid'>Unpaid</option>
-                                <option value = 'cancelled'>Cancelled</option>
-                                <option value = 'refunded'>Refund</option>
                             </select>
                         </div>
 
                         <div>
-                            <label className = 'mb-2 block text-xs font-semibold text-slate-600'>
-                                Room Type
-                            </label>
-
-                            <select
-                                value = { filters.roomType }
-                                onChange = { (event) => handleFilterChange('roomType', event.target.value) }
-                                className = 'w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-sm text-slate-700 outline-none transition focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-100'
-                            >
-                                <option value = 'all'>All Room Types</option>
-
-                                {roomTypes.map((roomType) => (
-                                    <option key = { roomType } value = { roomType }>
-                                        {roomType}
-                                    </option>
-                                ))}
+                            <label className = 'mb-2 block text-xs font-semibold text-[#806f64]'>Room Name</label>
+                            <select value = {filters.roomType} onChange = {(event) => changeFilter('roomType', event.target.value)} className = {inputClass}>
+                                <option value = 'all'>All Rooms</option>
+                                {roomTypes.map((room) => <option key = {room} value = {room}>{room}</option>)}
                             </select>
                         </div>
 
                         <div>
-                            <label className = 'mb-2 block text-xs font-semibold text-slate-600'>
-                                Search
-                            </label>
-
-                            <input
-                                type = 'text'
-                                value = { filters.search }
-                                onChange = { (event) => handleFilterChange('search', event.target.value) }
-                                placeholder = 'Guest, email, room, booking ID...'
-                                className = 'w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-100'
-                            />
+                            <label className = 'mb-2 block text-xs font-semibold text-[#806f64]'>Search</label>
+                            <div className = 'relative'>
+                                <Search size = {16} className = 'absolute left-3 top-1/2 -translate-y-1/2 text-[#ad9b90]' />
+                                <input type = 'text' value = {filters.search} onChange = {(event) => changeFilter('search', event.target.value)} placeholder = 'Guest, email, room, booking ID...' className = {`${inputClass} pl-10`} />
+                            </div>
                         </div>
-
                     </div>
 
-                    <div className = 'flex flex-wrap justify-end gap-3 border-t border-slate-100 pt-5'>
-                        <button
-                            type = 'button'
-                            onClick = { handleReset }
-                            className = 'rounded-xl border border-slate-200 px-5 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-50'
-                        >
-                            Reset Filters
+                    <div className = 'flex flex-wrap justify-end gap-3 border-t border-[#eee5de] pt-5'>
+                        <button type = 'button' onClick = {resetFilters} className = 'inline-flex items-center gap-2 rounded-xl border border-[#e5d9cf] px-5 py-2.5 text-sm font-semibold text-[#806f64] transition hover:bg-[#f8f3ee]'>
+                            <RotateCcw size = {15} /> Reset Filters
                         </button>
 
-                        <button
-                            type = 'submit'
-                            disabled = { loading }
-                            className = 'rounded-xl bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white shadow-md shadow-blue-600/20 transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50'
-                        >
+                        <button type = 'submit' disabled = {loading} className = 'rounded-xl bg-[#9b6b55] px-6 py-2.5 text-sm font-semibold text-white shadow-md shadow-[#9b6b55]/15 transition hover:bg-[#805541] disabled:opacity-50'>
                             {loading ? 'Applying...' : 'Apply Filters'}
                         </button>
                     </div>
-
                 </form>
             </section>
 
-            {/* Booking Preview */}
-            <section className = 'overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm'>
-
-                <div className = 'flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 px-5 py-4 md:px-6'>
+            {/* BOOKING DETAILS */}
+            <section className = 'overflow-hidden rounded-2xl border border-[#e9ded5] bg-[#fffdfa] shadow-sm'>
+                <div className = 'flex flex-wrap items-center justify-between gap-3 border-b border-[#eee5de] px-5 py-4 md:px-6'>
                     <div>
-                        <h2 className = 'font-semibold text-slate-800'>
-                            Booking Details
-                        </h2>
-                        <p className = 'mt-1 text-xs text-slate-500'>
-                            Preview of the records included in your Excel export.
-                        </p>
+                        <div className = 'flex items-center gap-2'>
+                            <FileSpreadsheet size = {18} className = 'text-[#a66f58]' />
+                            <h2 className = 'font-semibold text-[#493a34]'>Booking Details</h2>
+                        </div>
+                        <p className = 'mt-1 text-xs text-[#a09287]'>Full booking records for detailed checking and Excel export.</p>
                     </div>
 
-                    <div className = 'rounded-full bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-600'>
-                        {report?.bookings?.length || 0} records
-                    </div>
+                    <span className = 'rounded-full bg-[#f5eee8] px-3 py-1.5 text-xs font-semibold text-[#92705e]'>{filteredBookings.length} records</span>
                 </div>
 
                 {loading ? (
-                    <div className = 'flex min-h-48 items-center justify-center'>
-                        <div className = 'flex items-center gap-3 text-sm text-slate-500'>
-                            <span className = 'h-5 w-5 animate-spin rounded-full border-2 border-blue-600 border-t-transparent' />
-                            Loading booking data...
-                        </div>
-                    </div>
-                ) : report?.bookings?.length ? (
+                    <div className = 'flex min-h-48 items-center justify-center text-sm text-[#a09287]'>Loading booking data...</div>
+                ) : filteredBookings.length ? (
                     <div className = 'max-h-[560px] overflow-auto'>
-                        <table className = 'w-full min-w-[1050px] border-collapse text-left text-sm'>
-
-                            <thead className = 'sticky top-0 z-10 bg-slate-50'>
-                                <tr className = 'text-xs font-semibold uppercase tracking-wide text-slate-500'>
+                        <table className = 'w-full min-w-[1120px] border-collapse text-left text-sm'>
+                            <thead className = 'sticky top-0 z-10 bg-[#f8f3ee]'>
+                                <tr className = 'text-xs font-semibold uppercase tracking-wide text-[#927f73]'>
                                     <th className = 'px-5 py-4'>Guest</th>
                                     <th className = 'px-4 py-4'>Room</th>
                                     <th className = 'px-4 py-4'>Booking Date</th>
-                                    <th className = 'px-4 py-4'>Stay</th>
-                                    <th className = 'px-4 py-4 text-center'>Guests</th>
+                                    <th className = 'px-4 py-4'>Check-in</th>
+                                    <th className = 'px-4 py-4'>Check-out</th>
+                                    <th className = 'px-4 py-4 text-center'>Adults</th>
+                                    <th className = 'px-4 py-4 text-center'>Children</th>
                                     <th className = 'px-4 py-4 text-right'>Amount</th>
                                     <th className = 'px-5 py-4 text-center'>Payment</th>
                                 </tr>
                             </thead>
 
-                            <tbody className = 'divide-y divide-slate-100'>
-                                {report.bookings.map((booking) => (
-                                    <tr key = { booking._id } className = 'transition hover:bg-blue-50/40'>
-
+                            <tbody className = 'divide-y divide-[#f0e8e2]'>
+                                {paginatedBookings.map((booking) => (
+                                    <tr key = {booking._id} className = 'transition hover:bg-[#fbf7f2]'>
                                         <td className = 'px-5 py-4'>
-                                            <p className = 'font-semibold text-slate-800'>
-                                                {booking.guestName}
-                                            </p>
-                                            <p className = 'mt-1 text-xs text-slate-400'>
-                                                {booking.guestEmail || 'No email'}
-                                            </p>
+                                            <p className = 'font-semibold text-[#534239]'>{booking.guestName}</p>
+                                            <p className = 'mt-1 text-xs text-[#aa9a90]'>{booking.guestEmail || 'No email'}</p>
                                         </td>
 
                                         <td className = 'px-4 py-4'>
-                                            <span className = 'rounded-lg bg-slate-100 px-2.5 py-1.5 text-xs font-medium text-slate-700'>
-                                                {booking.roomName}
-                                            </span>
+                                            <span className = 'rounded-lg bg-[#f4ede7] px-2.5 py-1.5 text-xs font-medium text-[#80685a]'>{booking.roomName}</span>
                                         </td>
 
-                                        <td className = 'px-4 py-4 text-slate-500'>
-                                            {formatDate(booking.bookingDate)}
-                                        </td>
+                                        <td className = 'px-4 py-4 text-[#88776c]'>{formatDate(booking.bookingDate)}</td>
+                                        <td className = 'px-4 py-4 text-[#63534a]'>{formatDate(booking.checkInDate)}</td>
+                                        <td className = 'px-4 py-4 text-[#63534a]'>{formatDate(booking.checkOutDate)}</td>
+                                        <td className = 'px-4 py-4 text-center'>{booking.adults}</td>
+                                        <td className = 'px-4 py-4 text-center'>{booking.children}</td>
 
-                                        <td className = 'px-4 py-4'>
-                                            <p className = 'text-slate-700'>
-                                                {formatDate(booking.checkInDate)}
-                                            </p>
-                                            <p className = 'mt-1 text-xs text-slate-400'>
-                                                to {formatDate(booking.checkOutDate)}
-                                            </p>
-                                        </td>
-
-                                        <td className = 'px-4 py-4 text-center'>
-                                            <p className = 'font-semibold text-slate-700'>
-                                                {booking.guests}
-                                            </p>
-                                            <p className = 'mt-1 text-xs text-slate-400'>
-                                                {booking.adults} Adult · {booking.children} Child
-                                            </p>
-                                        </td>
-
-                                        <td className = 'px-4 py-4 text-right font-semibold tabular-nums text-slate-800'>
+                                        <td className = 'px-4 py-4 text-right font-semibold tabular-nums text-[#534239]'>
                                             {formatMoney(booking.totalPrice, currency)}
                                         </td>
 
                                         <td className = 'px-5 py-4 text-center'>
-                                            <span className = {`inline-flex rounded-full px-3 py-1.5 text-xs font-semibold ring-1 ring-inset ${getStatusStyle(booking.paymentStatus)}`}>
+                                            <span className = {`inline-flex rounded-full px-3 py-1.5 text-xs font-bold ring-1 ring-inset ${paymentStyle(booking.paymentStatus)}`}>
                                                 {booking.paymentStatus}
                                             </span>
                                         </td>
-
                                     </tr>
                                 ))}
                             </tbody>
-
                         </table>
                     </div>
                 ) : (
                     <div className = 'flex min-h-56 flex-col items-center justify-center px-5 text-center'>
-                        <div className = 'mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 text-2xl text-slate-400'>
-                            ▦
-                        </div>
-
-                        <h3 className = 'font-semibold text-slate-700'>
-                            No bookings found
-                        </h3>
-
-                        <p className = 'mt-2 max-w-sm text-xs leading-6 text-slate-400'>
-                            No records match your current filters. Try changing the date range or selecting another payment status.
-                        </p>
+                        <FileSpreadsheet size = {28} className = 'mb-3 text-[#c1afa2]' />
+                        <h3 className = 'font-semibold text-[#63534a]'>No bookings found</h3>
+                        <p className = 'mt-2 max-w-sm text-xs leading-6 text-[#aa9a90]'>No records match the selected filters. Try changing the date range or payment status.</p>
                     </div>
                 )}
 
-                <div className = 'flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 bg-slate-50/70 px-5 py-3 text-xs text-slate-400'>
-                    <span>Data is based on the selected report filters.</span>
+                {/* PAGINATION */}
+                {!loading && filteredBookings.length > 0 && (
+                    <div className = 'flex flex-col gap-3 border-t border-[#eee5de] bg-[#fffdfa] px-5 py-4 sm:flex-row sm:items-center sm:justify-between'>
+                        <p className = 'text-xs text-[#aa9a90]'>
+                            Showing {(currentPage - 1) * itemsPerPage + 1}–{Math.min(currentPage * itemsPerPage, filteredBookings.length)} of {filteredBookings.length} bookings
+                        </p>
+
+                        {totalPages > 1 && (
+                            <div className = 'flex flex-wrap items-center justify-center gap-1.5'>
+                                <button
+                                    type = 'button'
+                                    onClick = {() => setCurrentPage((page) => Math.max(1, page - 1))}
+                                    disabled = {currentPage === 1}
+                                    aria-label = 'Previous page'
+                                    className = 'flex h-9 w-9 items-center justify-center rounded-lg border border-[#e8ddd3] text-[#806f64] transition hover:bg-[#f8f3ee] disabled:cursor-not-allowed disabled:opacity-40'
+                                >
+                                    <ChevronLeft size = {17} />
+                                </button>
+
+                                {pageNumbers.map((page) => (
+                                    <button
+                                        key = {page}
+                                        type = 'button'
+                                        onClick = {() => setCurrentPage(page)}
+                                        aria-label = {`Go to page ${page}`}
+                                        aria-current = {currentPage === page ? 'page' : undefined}
+                                        className = {`h-9 min-w-9 rounded-lg px-3 text-xs font-semibold transition ${currentPage === page ? 'bg-[#9b6b55] text-white shadow-sm' : 'border border-[#e8ddd3] text-[#806f64] hover:bg-[#f8f3ee]'}`}
+                                    >
+                                        {page}
+                                    </button>
+                                ))}
+
+                                <button
+                                    type = 'button'
+                                    onClick = {() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
+                                    disabled = {currentPage === totalPages}
+                                    aria-label = 'Next page'
+                                    className = 'flex h-9 w-9 items-center justify-center rounded-lg border border-[#e8ddd3] text-[#806f64] transition hover:bg-[#f8f3ee] disabled:cursor-not-allowed disabled:opacity-40'
+                                >
+                                    <ChevronRight size = {17} />
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                )}
+
+                <div className = 'flex flex-wrap items-center justify-between gap-2 border-t border-[#eee5de] bg-[#faf7f3] px-5 py-3 text-xs text-[#aa9a90]'>
+                    <span>Data reflects the selected report filters. Excel export includes all matching bookings.</span>
                     <span>Currency: {currency}</span>
                 </div>
+            </section>
 
+            {/* REVENUE INFORMATION */}
+            <section className = 'flex flex-col gap-3 rounded-2xl border border-[#e9ded5] bg-[#f8f3ee] p-5 md:flex-row md:items-center md:justify-between md:px-6'>
+                <div className = 'flex items-start gap-3'>
+                    <div className = 'mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white text-[#a66f58]'>
+                        <Clock3 size = {18} />
+                    </div>
+
+                    <div>
+                        <p className = 'text-sm font-semibold text-[#6b5549]'>Revenue calculation</p>
+                        <p className = 'mt-1 text-xs leading-6 text-[#927f73]'>
+                            Payment status is based on the isPaid flag. Revenue is grouped by Booking Date (createdAt) in Bangkok time, not by Check-in Date or payment timestamp. Date Type only controls which booking records are included.
+                        </p>
+                    </div>
+                </div>
+
+                <span className = 'shrink-0 text-xs font-semibold text-[#a17a64]'>{currentPeriod.year}</span>
             </section>
 
         </div>

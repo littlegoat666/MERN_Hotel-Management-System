@@ -34,22 +34,26 @@ const AllRooms = () => {
     });
     const [ selectedSort, setSelectedSort ] = useState('')
 
-    const roomTypes = [
-        'Standard Room',
-        'Standard Double',
-        'Superior Room',
-        'Superior Double',
-        'Deluxe Room',
-        'Deluxe Double',
-        'Junior Suite',
-        'Family Suite'
-    ];
+    const roomTypes = useMemo(() => {
+        const uniqueRoomTypes = new Map()
+
+        rooms.forEach((room) => {
+            const roomType = room.roomType?.trim()
+
+            if (roomType && !uniqueRoomTypes.has(roomType.toLowerCase())) {
+                uniqueRoomTypes.set(roomType.toLowerCase(), roomType)
+            }
+        })
+
+        return [...uniqueRoomTypes.values()].sort((a, b) => a.localeCompare(b))
+    }, [rooms])
 
     const priceRanges = [
-        '0 to 250',
-        '251 to 500',
-        '501 to 750',
-        '751 to 1000',
+        '0 to 200',
+        '201 to 400',
+        '401 to 600',
+        '601 to 800',
+        '801 to 1000',
     ];
 
     const sortOptions = [

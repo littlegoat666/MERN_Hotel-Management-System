@@ -105,7 +105,8 @@ export const AppProvider = ({ children }) => {
         searchedCities,
         setSearchedCities,
         rooms,
-        setRooms
+        setRooms,
+        fetchRooms,
     }
 
     return (
