@@ -79,75 +79,76 @@ const MyBookings = () => {
     }, [ user ])
 
     return (
-        <div className = 'py-28 md:pb-35 md:pt-32 px-4 md:px-16 lg:px-24 xl:px-32'>
-            <Title title = 'My Bookings' subTitle = "Review your upcoming and previous stays, including check-in and check-out dates, guest details, booking totals, and payment status." align = 'left' />
-            <div className = 'max-w-6xl mt-8 w-full text-gray-800'>
-                <div className = 'hidden md:grid md:grid-cols-[3fr_2fr_1fr] w-full border-b border-gray-300 font-mali text-base py-3'>
+        <div className = 'py-28 md:pb-35 md:pt-32 px-4 md:px-16 lg:px-24 xl:px-32 bg-[#FAF7F2] min-h-screen'>
+                        <Title title = 'My Bookings' subTitle = '' align = 'left' font = 'font-mali text-[#55443B]' />
+
+            <div className = 'max-w-6xl mt-8 w-full text-[#51443D]'>
+                <div className = 'hidden md:grid md:grid-cols-[3fr_2fr_1fr] w-full border-b border-[#D8C9BC] font-mali text-base py-3'>
                     <div className = 'w-1/3'> Rooms </div>
                     <div className = 'w-1/3'> Date & Timings </div>
                     <div className = 'w-1/3'> Payment </div>
                 </div>
 
                 { bookings.map((booking) => (
-                    <div key = { booking._id } className = 'grid grid-cols-1 md:grid-cols-[3fr_2fr_1fr] w-full border-b border-gray-300 py-6 first:border-t'>
-                        
+                    <div key = { booking._id } className = 'grid grid-cols-1 md:grid-cols-[3fr_2fr_1fr] w-full border-b border-[#E5DAD0] py-6 first:border-t'>
+
                         {/* ------ Room Details ------ */}
-                            <div className = 'flex flex-col md:flex-row'>
-                                <img src = { booking.room.images[0] } alt = 'hotel-img' className = 'md:w-44 rounded shadow object-cover' />
-                                <div className = 'flex flex-col gap-1.5 max-md:mt-3 md:ml-4'>
-                                    <p className = 'font-mali text-2xl'>{ booking.room.roomType }</p>
+                        <div className = 'flex flex-col md:flex-row'>
+                            <img src = { booking.room.images[0] } alt = 'hotel-img' className = 'md:w-44 rounded shadow object-cover' />
 
-                                    <div className = 'flex items-center gap-1 text-sm text-gray-500'>
-                                        <img src = { assets.locationIcon } alt = 'hotel-img' />
-                                        <span>{ booking.hotel.address }</span>
-                                    </div>
+                            <div className = 'flex flex-col gap-1.5 max-md:mt-3 md:ml-4'>
+                                <p className = 'font-mali text-2xl text-[#51443D]'>{ booking.room.roomType }</p>
 
-                                    <div className = 'flex items-center gap-1 text-sm text-gray-500'>
-                                        <img src = { assets.guestsIcon } alt = 'guests-icon' />
-                                        <span> Guests: { booking.guests } (Adults: { booking.adults ?? booking.guests }, Children: { booking.children ?? 0 }) </span>
-                                    </div>
-
-                                    <p className = 'text-base'> Total: { currency } { booking.totalPrice } </p>
+                                <div className = 'flex items-center gap-1 text-sm text-[#918077]'>
+                                    <img src = { assets.locationIcon } alt = 'hotel-img' />
+                                    <span>{ booking.hotel.address }</span>
                                 </div>
+
+                                <div className = 'flex items-center gap-1 text-sm text-[#918077]'>
+                                    <img src = { assets.guestsIcon } alt = 'guests-icon' />
+                                    <span> Guests: { booking.guests } (Adults: { booking.adults ?? booking.guests }, Children: { booking.children ?? 0 }) </span>
+                                </div>
+
+                                <p className = 'text-base text-[#A65F46]'> Total: { currency } { booking.totalPrice } </p>
                             </div>
+                        </div>
 
                         {/* ------ Date & Timings ------ */}
-                            <div className = 'flex flex-row md:items-center md:gap-12 mt-3 gap-8'>
-                                <div>
-                                    <p> Check In: </p>
-                                    <p className = 'className = "text-gray-500 text-sm"'>
-                                        { new Date(booking.checkInDate).toDateString()}
-                                    </p>
-                                </div>
-
-                                <div>
-                                    <p> Check Out: </p>
-                                    <p className = 'className = "text-gray-500 text-sm"'>
-                                        { new Date(booking.checkOutDate).toDateString()}
-                                    </p>
-                                </div>
+                        <div className = 'flex flex-row md:items-center md:gap-12 mt-3 gap-8'>
+                            <div>
+                                <p className = 'text-[#51443D]'> Check In: </p>
+                                <p className = 'text-[#918077] text-sm'>
+                                    { new Date(booking.checkInDate).toDateString() }
+                                </p>
                             </div>
+
+                            <div>
+                                <p className = 'text-[#51443D]'> Check Out: </p>
+                                <p className = 'text-[#918077] text-sm'>
+                                    { new Date(booking.checkOutDate).toDateString() }
+                                </p>
+                            </div>
+                        </div>
 
                         {/* ------ Payment ------ */}
-                            <div className = 'flex flex-col items-start justify-center pt-3'>
-                                <div className = 'flex items-center gap-2'>
-                                    <div className = {`h-3 w-3 rounded-full ${ booking.isPaid ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                                    <p className = {`text-sm ${ booking.isPaid ? 'text-green-500' : 'text-red-500'}`}>
-                                        { booking.isPaid ? 'Paid' : 'Unpaid'}
-                                    </p>
-                                </div>
-                                {!booking.isPaid && (
-                                    <>
-                                        <button onClick = {() => handlePayment(booking._id)} className = 'px-4 py-1.5 mt-4 text-xs border border-gray-400 rounded-full hover:bg-gray-50 transition-all cursor-pointer'>
-                                            Pay Now
-                                        </button>
-
-                                        <button onClick = {() => handleCancelBooking(booking._id)} disabled = {cancellingBookingId === booking._id} className = 'px-4 py-1.5 mt-2 text-xs border border-red-300 text-red-600 rounded-full hover:bg-red-50 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed'>
-                                            { cancellingBookingId === booking._id ? 'Cancelling...' : 'Cancel Booking' }
-                                        </button>
-                                    </>
-                                )}
+                        <div className = 'flex flex-col items-start justify-center pt-3'>
+                            <div className = {`flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${ booking.isPaid ? 'bg-[#E4F3E8] text-[#27834A]' : 'bg-[#FFF0E5] text-[#D66A32]'}`}>
+                                <div className = {`h-2.5 w-2.5 rounded-full ${ booking.isPaid ? 'bg-[#35A85D]' : 'bg-[#F08A45]'}`}></div>
+                                <p>{ booking.isPaid ? 'Paid' : 'Unpaid' }</p>
                             </div>
+
+                            {!booking.isPaid && (
+                                <>
+                                    <button onClick = {() => handlePayment(booking._id)} className = 'px-5 py-2 mt-4 text-xs font-medium bg-[#C47755] text-white rounded-full hover:bg-[#A85D40] shadow-sm hover:shadow-md transition-all cursor-pointer'>
+                                        Pay Now
+                                    </button>
+
+                                    <button onClick = {() => handleCancelBooking(booking._id)} disabled = {cancellingBookingId === booking._id} className = 'px-5 py-2 mt-2 text-xs font-medium bg-[#FFF0EF] border border-[#F2C5C1] text-[#D65C55] rounded-full hover:bg-[#FCE0DD] hover:border-[#E9A7A1] transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed'>
+                                        { cancellingBookingId === booking._id ? 'Cancelling...' : 'Cancel Booking' }
+                                    </button>
+                                </>
+                            )}
+                        </div>
                     </div>
                 ))}
             </div>

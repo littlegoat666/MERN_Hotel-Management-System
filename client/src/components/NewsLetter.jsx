@@ -4,18 +4,31 @@ import Title from './Title'
 
 const NewsLetter = () => {
     return (
-        <div className = 'flex flex-col items-center max-w-5xl lg:w-full rounded-2xl px-4 py-12 md:py-16 mx-2 lg:mx-auto my-20 bg-gray-900 text-white'>
-            
-            <Title title = 'Subscribe to Our Newsletter' subTitle = "Receive occasional updates about Chiang Mai travel ideas, nearby attractions, and booking announcements for Bupatara Chiangmai." />
-            <div className = 'flex flex-col md:flex-row items-center justify-center gap-4 mt-6'>
-                <input type = 'text' className = 'bg-white/10 px-4 py-2.5 border border-white/20 rounded outline-none max-w-66 w-full' placeholder = 'Enter your email' />
-                <button className = 'flex items-center justify-center gap-2 group bg-black px-4 md:px-7 py-2.5 rounded active:scale-95 transition-all'> Subscribe
-                    <img src = { assets.arrowIcon } alt = 'arrow-icon' className = 'w-3.5 invert group-hover:translate-x-1 transition-all' />
-                </button>
+        <section className = 'bg-white px-4 py-12 md:px-8 md:py-16'>
+            <div className = 'mx-auto my-8 flex w-full max-w-5xl flex-col items-center overflow-hidden rounded-2xl bg-gray-900 px-5 py-12 text-white shadow-xl shadow-gray-900/10 md:py-16 md:px-10'>
+
+                <div className = 'mb-5 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-semibold tracking-[0.15em] text-white/80'>
+                    STAY CONNECTED
+                </div>
+
+                <div className = 'w-full'>
+                    <Title title = 'Subscribe to Our Newsletter' subTitle = "Receive occasional updates about Chiang Mai travel ideas, nearby attractions, and booking announcements for Bupatara Chiangmai." />
+                </div>
+
+                <div className = 'mt-8 flex w-full max-w-xl flex-col items-center justify-center gap-3 sm:flex-row'>
+                    <input type = 'text' className = 'w-full min-w-0 rounded-xl border border-white/20 bg-white/10 px-5 py-3 text-sm text-white outline-none transition placeholder:text-gray-400 focus:border-white/50 focus:bg-white/15' placeholder = 'Enter your email' />
+
+                    <button className = 'group flex w-full shrink-0 items-center justify-center gap-2 rounded-xl bg-black px-7 py-3 text-sm font-semibold text-white transition-all hover:bg-gray-800 active:scale-95 sm:w-auto'>
+                        Subscribe
+                        <img src = { assets.arrowIcon } alt = 'arrow-icon' className = 'w-3.5 invert transition-all group-hover:translate-x-1' />
+                    </button>
+                </div>
+
+                <p className = 'mt-6 text-center text-xs leading-6 text-gray-500'>
+                    By subscribing, you agree to our Privacy Policy and consent to receive updates.
+                </p>
             </div>
-        
-            <p className = 'text-gray-500 mt-6 text-xs text-center'> By subscribing, you agree to our Privacy Policy and consent to receive updates. </p>
-        </div>
+        </section>
     )
 }
 

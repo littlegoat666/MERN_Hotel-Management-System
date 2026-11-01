@@ -195,7 +195,7 @@ export const getHotelBookings = async (req, res) => {
         })
     } catch (error) {
         console.error('Get hotel bookings error:', error.message)
-        return res.status(500).json({ success: false, message: 'Failed to fetch hotel bookings' })
+        return res.status(500).json({ success: false, message: 'Failed to fetch bookings' })
     }
 }
 
@@ -257,12 +257,21 @@ export const stripePayment = async (req, res) => {
 
         const roomData = await Room.findById(booking.room).populate('hotel')
         if (!roomData?.hotel) return res.status(404).json({ success: false, message: 'The room details for this booking are no longer available' })
+
+        const roomImages = Array.isArray(roomData.images)
+            ? roomData.images.filter((image) => typeof image === 'string' && /^https?:\/\//i.test(image)).slice(0, 8)
+            : []
+
         const { origin } = req.headers
         const stripeInstance = new stripe(process.env.STRIPE_SECRET_KEY)
+
         const line_items = [{
             price_data: {
                 currency: 'thb',
-                product_data: { name: `${roomData.hotel.name} - ${roomData.roomType}` },
+                product_data: {
+                    name: `${roomData.hotel.name} - ${roomData.roomType}`,
+                    ...(roomImages.length > 0 ? { images: roomImages } : {}),
+                },
                 unit_amount: Math.round(Number(booking.totalPrice) * 100),
             },
             quantity: 1,
@@ -271,10 +280,19 @@ export const stripePayment = async (req, res) => {
         const session = await stripeInstance.checkout.sessions.create({
             line_items,
             mode: 'payment',
+            locale: 'auto',
+            branding_settings: {
+                display_name: roomData.hotel.name || 'Bupatara Chiangmai',
+                background_color: '#FAF7F2',
+                button_color: '#A96F58',
+                border_style: 'rounded',
+                font_family: 'pridi',
+            },
             success_url: `${origin}/loader/my-bookings`,
             cancel_url: `${origin}/my-bookings`,
             metadata: { bookingId: String(booking._id) },
         })
+
         return res.json({ success: true, url: session.url })
     } catch (error) {
         console.error('Stripe payment error:', error.message)

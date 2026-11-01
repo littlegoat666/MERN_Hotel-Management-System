@@ -3,12 +3,193 @@ import { Link, useLocation } from 'react-router-dom'
 import { assets } from '../assets/assets'
 import { useClerk, UserButton } from '@clerk/clerk-react'
 import { useAppContext } from '../context/AppContext'
+import { CalendarCheck } from 'lucide-react'
 
+// My Booking icon for Hotel Owner
 const BookIcon = () => (
-    <svg className = 'w-4 h-4 text-gray-700' aria-hidden = 'true' xmlns = 'http://www.w3.org/2000/svg' width = '24' height = '24' fill = 'none' viewBox = '0 0 24 24'>
-        <path stroke = 'currentColor' strokeLinecap = 'round' strokeLinejoin = 'round' strokeWidth = '2' d = 'M5 19V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v13H7a2 2 0 0 0-2 2Zm00a2 2 0 0 0 2 2h12M9 3V14m7 0v4' />
-    </svg>
+    <CalendarCheck size = {16} strokeWidth = {2} className = 'text-[#D97745]' />
 )
+
+// Clerk UserButton dropdown appearance
+const userButtonAppearance = {
+    variables: {
+        colorPrimary: '#B96F4D',
+        colorForeground: '#51443D',
+        colorMutedForeground: '#918077',
+        colorBackground: '#FFFDFA',
+        colorBorder: '#E8DDD3',
+        colorNeutral: '#B8A397',
+        colorRing: '#C47755',
+        fontFamily: "'Mali', cursive",
+        fontFamilyButtons: "'Mali', cursive",
+        borderRadius: '14px',
+    },
+
+    elements: {
+        userButtonTrigger: {
+            border: '2px solid #E8DDD3',
+            borderRadius: '999px',
+            padding: '2px',
+            boxShadow: '0 2px 8px rgba(81, 68, 61, 0.08)',
+        },
+
+        userButtonPopoverCard: {
+            minWidth: '260px',
+            backgroundColor: '#FFFDFA',
+            border: '1px solid #E8DDD3',
+            borderRadius: '18px',
+            boxShadow: '0 18px 45px rgba(81, 68, 61, 0.16)',
+            padding: '8px',
+        },
+
+        userButtonPopoverMain: {
+            padding: '4px',
+        },
+
+        userButtonPopoverActions: {
+            gap: '5px',
+            padding: '4px',
+        },
+
+        userButtonPopoverActionButton: {
+            color: '#51443D',
+            borderRadius: '12px',
+            padding: '10px 12px',
+            fontFamily: "'Mali', cursive",
+            fontSize: '13px',
+            transition: 'background-color 150ms ease',
+        },
+
+        userButtonPopoverActionButton__manageAccount: {
+            backgroundColor: '#F8F1EB',
+            color: '#8F5946',
+        },
+
+        userButtonPopoverActionButton__signOut: {
+            backgroundColor: '#FFF4F2',
+            color: '#C65C50',
+        },
+
+        userButtonPopoverActionButtonIconBox: {
+            color: '#A65F46',
+        },
+
+        userButtonPopoverActionButtonIconBox__signOut: {
+            color: '#C65C50',
+        },
+
+        userButtonPopoverCustomItemButton: {
+            color: '#A65F46',
+            borderRadius: '12px',
+            padding: '10px 12px',
+            fontFamily: "'Mali', cursive",
+            fontSize: '13px',
+            transition: 'background-color 150ms ease',
+        },
+
+        // Match the custom icon container with Clerk's default icon size
+        userButtonPopoverCustomItemButtonIconBox: {
+            width: '16px',
+            height: '16px',
+            minWidth: '16px',
+            minHeight: '16px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#D97745',
+        },
+
+        userButtonPopoverActionItemButtonIcon: {
+            width: '16px',
+            height: '16px',
+            color: '#D97745',
+        },
+
+        userButtonPopoverFooter: {
+            borderTop: '1px solid #F0E5DC',
+            marginTop: '6px',
+        },
+    },
+}
+
+// Clerk Manage Account appearance
+const userProfileAppearance = {
+    variables: {
+        colorPrimary: '#B96F4D',
+        colorForeground: '#51443D',
+        colorMutedForeground: '#918077',
+        colorBackground: '#FFFDFA',
+        colorBorder: '#E8DDD3',
+        colorInput: '#FFFDFA',
+        colorInputForeground: '#51443D',
+        colorRing: '#C47755',
+        colorSuccess: '#668F70',
+        colorDanger: '#C65C50',
+        fontFamily: "'Mali', cursive",
+        fontFamilyButtons: "'Mali', cursive",
+        borderRadius: '12px',
+    },
+
+    elements: {
+        card: {
+            backgroundColor: '#FFFDFA',
+            border: '1px solid #E8DDD3',
+            borderRadius: '20px',
+            boxShadow: '0 20px 55px rgba(81, 68, 61, 0.15)',
+        },
+
+        navbar: {
+            backgroundColor: '#FAF7F2',
+            borderRight: '1px solid #E8DDD3',
+        },
+
+        navbarButton: {
+            color: '#75665D',
+            borderRadius: '12px',
+            margin: '4px 8px',
+            fontFamily: "'Mali', cursive",
+        },
+
+        navbarButton__active: {
+            backgroundColor: '#F2E5DC',
+            color: '#8F5946',
+        },
+
+        profileSectionTitle: {
+            color: '#51443D',
+            fontFamily: "'Mali', cursive",
+        },
+
+        profileSectionContent: {
+            color: '#75665D',
+        },
+
+        profileSectionPrimaryButton: {
+            backgroundColor: '#C47755',
+            color: '#FFFFFF',
+            borderRadius: '12px',
+        },
+
+        formButtonPrimary: {
+            backgroundColor: '#C47755',
+            color: '#FFFFFF',
+            borderRadius: '12px',
+            fontFamily: "'Mali', cursive",
+        },
+
+        formFieldInput: {
+            backgroundColor: '#FFFDFA',
+            border: '1px solid #E8DDD3',
+            color: '#51443D',
+            borderRadius: '10px',
+        },
+
+        formFieldLabel: {
+            color: '#75665D',
+            fontFamily: "'Mali', cursive",
+        },
+    },
+}
 
 const languages = [
     { code: 'EN', label: 'English' },
@@ -46,6 +227,7 @@ const Navbar = () => {
 
     return (
         <nav className = {`fixed top-0 left-0 w-full flex items-center justify-between gap-3 px-4 md:px-8 lg:px-16 xl:px-24 transition-all duration-300 z-50 ${ isScrolled || isMenuOpen ? 'bg-white/95 shadow-md text-gray-700 backdrop-blur-lg py-3 md:py-4' : 'py-4 md:py-6'}`}>
+
             <Link to = '/' onClick = {() => setIsMenuOpen(false)} className = 'shrink-0'>
                 <img src = { assets.logo } alt = 'Bupatara Chiangmai home' className = 'h-9' />
             </Link>
@@ -76,34 +258,53 @@ const Navbar = () => {
                 )}
 
                 <img src = { assets.searchIcon } alt = '' aria-hidden = 'true' className = 'h-6 w-6 brightness-0 opacity-90' />
+
                 { user ? (
-                    <UserButton>
-                        { isOwner && <UserButton.MenuItems>
-                            <UserButton.Action label = 'My Booking' labelIcon = {<BookIcon />} onClick = {() => navigate('/my-bookings')} />
-                        </UserButton.MenuItems> }
+                    <UserButton appearance = { userButtonAppearance } userProfileProps = {{ appearance: userProfileAppearance }}>
+                        <UserButton.MenuItems>
+                            <UserButton.Action label = 'manageAccount' />
+
+                            { isOwner && (
+                                <UserButton.Action label = 'My Booking' labelIcon = {<BookIcon />} onClick = {() => navigate('/my-bookings')} />
+                            )}
+
+                            <UserButton.Action label = 'signOut' />
+                        </UserButton.MenuItems>
                     </UserButton>
                 ) : (
-                    <button onClick = { openSignIn } className = 'rounded-full bg-black px-5 py-2.5 text-sm text-white transition hover:bg-gray-800'>Login</button>
+                    <button onClick = { openSignIn } className = 'rounded-full bg-black px-5 py-2.5 text-sm text-white transition hover:bg-gray-800'>
+                        Login
+                    </button>
                 )}
             </div>
 
             {/* Mobile controls */}
             <div className = 'flex items-center gap-3 md:hidden'>
-                { user && <UserButton>
-                    { isOwner && (
+                { user && (
+                    <UserButton appearance = { userButtonAppearance } userProfileProps = {{ appearance: userProfileAppearance }}>
                         <UserButton.MenuItems>
-                            <UserButton.Action label = 'My Booking' labelIcon = {<BookIcon />} onClick = {() => navigate('/my-bookings')} />
+                            <UserButton.Action label = 'manageAccount' />
+
+                            { isOwner && (
+                                <UserButton.Action label = 'My Booking' labelIcon = {<BookIcon />} onClick = {() => navigate('/my-bookings')} />
+                            )}
+
+                            <UserButton.Action label = 'signOut' />
                         </UserButton.MenuItems>
-                    )}
-                </UserButton> }
+                    </UserButton>
+                )}
+
                 <button type = 'button' onClick = {() => setIsMenuOpen(!isMenuOpen)} aria-label = { isMenuOpen ? 'Close navigation menu' : 'Open navigation menu' } aria-expanded = { isMenuOpen } className = 'rounded-md p-2'>
                     <img src = { isMenuOpen ? assets.closeMenu : assets.menuIcon } alt = '' className = 'h-5 w-5 brightness-0' />
                 </button>
             </div>
 
-            {/* Mobile navigation: same links and language options as desktop */}
+            {/* Mobile navigation */}
             <div className = {`fixed inset-0 z-40 flex h-screen flex-col items-center justify-center gap-7 bg-white px-6 text-gray-800 transition-all duration-300 md:hidden ${ isMenuOpen ? 'translate-x-0 opacity-100' : 'pointer-events-none -translate-x-full opacity-0'}`}>
-                <button type = 'button' onClick = {() => setIsMenuOpen(false)} aria-label = 'Close navigation menu' className = 'absolute right-5 top-5 rounded-full border border-gray-200 px-4 py-2 text-sm'>Close</button>
+                <button type = 'button' onClick = {() => setIsMenuOpen(false)} aria-label = 'Close navigation menu' className = 'absolute right-5 top-5 rounded-full border border-gray-200 px-4 py-2 text-sm'>
+                    Close
+                </button>
+
                 { navLinks.map((link) => (
                     <Link key = { link.path } to = { link.path } onClick = {() => setIsMenuOpen(false)} aria-current = { isActive(link.path) ? 'page' : undefined } className = {`text-lg transition-colors ${ isActive(link.path) ? 'font-semibold text-blue-600' : 'text-gray-800'}`}>
                         { link.name }
@@ -123,7 +324,11 @@ const Navbar = () => {
                     </button>
                 )}
 
-                { !user && <button onClick = {() => { setIsMenuOpen(false); openSignIn() }} className = 'rounded-full bg-black px-8 py-2.5 text-white'>Login</button> }
+                { !user && (
+                    <button onClick = {() => { setIsMenuOpen(false); openSignIn() }} className = 'rounded-full bg-black px-8 py-2.5 text-white'>
+                        Login
+                    </button>
+                )}
             </div>
         </nav>
     )
