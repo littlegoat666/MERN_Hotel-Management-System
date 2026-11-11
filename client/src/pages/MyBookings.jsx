@@ -80,7 +80,7 @@ const MyBookings = () => {
 
     return (
         <div className = 'py-28 md:pb-35 md:pt-32 px-4 md:px-16 lg:px-24 xl:px-32 bg-[#FAF7F2] min-h-screen'>
-                        <Title title = 'My Bookings' subTitle = '' align = 'left' font = 'font-mali text-[#55443B]' />
+            <Title title = 'My Bookings' subTitle = '' align = 'left' font = 'font-mali text-[#55443B]' />
 
             <div className = 'max-w-6xl mt-8 w-full text-[#51443D]'>
                 <div className = 'hidden md:grid md:grid-cols-[3fr_2fr_1fr] w-full border-b border-[#D8C9BC] font-mali text-base py-3'>
@@ -93,10 +93,14 @@ const MyBookings = () => {
                     <div key = { booking._id } className = 'grid grid-cols-1 md:grid-cols-[3fr_2fr_1fr] w-full border-b border-[#E5DAD0] py-6 first:border-t'>
 
                         {/* ------ Room Details ------ */}
-                        <div className = 'flex flex-col md:flex-row'>
-                            <img src = { booking.room.images[0] } alt = 'hotel-img' className = 'md:w-44 rounded shadow object-cover' />
+                        <div className = 'flex flex-col md:flex-row items-start'>
+                            <img
+                                src = { booking.room.images[0] }
+                                alt = 'hotel-img'
+                                className = 'md:w-52 md:h-44 rounded shadow object-contain bg-[#F5EEE7] flex-shrink-0'
+                            />
 
-                            <div className = 'flex flex-col gap-1.5 max-md:mt-3 md:ml-4'>
+                            <div className = 'flex flex-col gap-1.5 max-md:mt-3 md:ml-5'>
                                 <p className = 'font-mali text-2xl text-[#51443D]'>{ booking.room.roomType }</p>
 
                                 <div className = 'flex items-center gap-1 text-sm text-[#918077]'>

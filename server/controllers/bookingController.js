@@ -31,6 +31,116 @@ const getBangkokParts = (date = new Date()) => {
     )
 }
 
+const escapeHtml = (value) => String(value ?? '').replace(/[&<>"']/g, (character) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+}[character]))
+
+const formatDate = (value) => {
+    if (!value) return '-'
+
+    return new Date(value).toLocaleDateString('en-GB', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+        timeZone: 'Asia/Bangkok',
+    })
+}
+
+const formatDateTime = (value) => {
+    if (!value) return '-'
+
+    return new Date(value).toLocaleString('en-GB', {
+        timeZone: 'Asia/Bangkok',
+    })
+}
+
+const createBookingEmailHtml = ({ booking, guestName, hotelName, roomName, pricePerNight, title, message, footer }) => {
+    const currency = process.env.CURRENCY || '฿'
+    const totalPrice = Number(booking.totalPrice || 0).toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    })
+
+    const nights = Math.max(0, Math.ceil(
+        (new Date(booking.checkOutDate) - new Date(booking.checkInDate)) / (1000 * 60 * 60 * 24)
+    ))
+
+    const adults = Number(booking.adults ?? booking.guests ?? 1)
+    const children = Number(booking.children ?? 0)
+    const guests = Number(booking.guests ?? adults + children)
+
+    return `
+        <div style="margin: 0; padding: 32px 16px; background-color: #FAF7F2; font-family: Arial, sans-serif; color: #55443B;">
+            <div style="max-width: 600px; margin: 0 auto; padding: 32px; background-color: #FFFDFA; border: 1px solid #E7DAD0; border-radius: 16px;">
+                <p style="margin: 0 0 8px; color: #A96F58; font-size: 12px; font-weight: bold; letter-spacing: 2px;">BUPATARA CHIANGMAI</p>
+
+                <h2 style="margin: 0 0 16px; color: #55443B;">${escapeHtml(title)}</h2>
+
+                <p>Dear ${escapeHtml(guestName)},</p>
+
+                <p>${escapeHtml(message)}</p>
+
+                <h3 style="margin: 28px 0 12px; color: #A96F58;">Booking Details</h3>
+
+                <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+                    <tr>
+                        <td style="padding: 9px 0; border-bottom: 1px solid #E7DAD0;"><strong>Booking ID</strong></td>
+                        <td style="padding: 9px 0; border-bottom: 1px solid #E7DAD0; text-align: right;">${escapeHtml(booking._id)}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 9px 0; border-bottom: 1px solid #E7DAD0;"><strong>Guest Name</strong></td>
+                        <td style="padding: 9px 0; border-bottom: 1px solid #E7DAD0; text-align: right;">${escapeHtml(guestName)}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 9px 0; border-bottom: 1px solid #E7DAD0;"><strong>Hotel</strong></td>
+                        <td style="padding: 9px 0; border-bottom: 1px solid #E7DAD0; text-align: right;">${escapeHtml(hotelName)}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 9px 0; border-bottom: 1px solid #E7DAD0;"><strong>Room</strong></td>
+                        <td style="padding: 9px 0; border-bottom: 1px solid #E7DAD0; text-align: right;">${escapeHtml(roomName)}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 9px 0; border-bottom: 1px solid #E7DAD0;"><strong>Booking Date</strong></td>
+                        <td style="padding: 9px 0; border-bottom: 1px solid #E7DAD0; text-align: right;">${escapeHtml(formatDateTime(booking.createdAt))}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 9px 0; border-bottom: 1px solid #E7DAD0;"><strong>Check-in</strong></td>
+                        <td style="padding: 9px 0; border-bottom: 1px solid #E7DAD0; text-align: right;">${escapeHtml(formatDate(booking.checkInDate))}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 9px 0; border-bottom: 1px solid #E7DAD0;"><strong>Check-out</strong></td>
+                        <td style="padding: 9px 0; border-bottom: 1px solid #E7DAD0; text-align: right;">${escapeHtml(formatDate(booking.checkOutDate))}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 9px 0; border-bottom: 1px solid #E7DAD0;"><strong>Duration</strong></td>
+                        <td style="padding: 9px 0; border-bottom: 1px solid #E7DAD0; text-align: right;">${nights} ${nights === 1 ? 'night' : 'nights'}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 9px 0; border-bottom: 1px solid #E7DAD0;"><strong>Guests</strong></td>
+                        <td style="padding: 9px 0; border-bottom: 1px solid #E7DAD0; text-align: right;">${guests} (Adults: ${adults}, Children: ${children})</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px 0; color: #A96F58;"><strong>Booking Total</strong></td>
+                        <td style="padding: 12px 0; color: #A96F58; text-align: right;"><strong>${totalPrice} ${escapeHtml(currency)}</strong></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0 0 12px; color: #8C7A70;"><strong>Price per night</strong></td>
+                        <td style="padding: 0 0 12px; color: #8C7A70; text-align: right;">${Number(pricePerNight || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${escapeHtml(currency)} / night</td>
+                    </tr>
+                </table>
+
+                <p style="margin: 28px 0 0; font-size: 13px; color: #8C7A70;">${escapeHtml(footer)}</p>
+
+                <p style="margin: 16px 0 0;">Best regards,<br />Bupatara Chiangmai</p>
+            </div>
+        </div>
+    `
+}
+
 export const checkAvailabilityAPI = async (req, res) => {
     try {
         const { room, checkInDate, checkOutDate } = req.body
@@ -87,24 +197,16 @@ export const createBooking = async (req, res) => {
             from: process.env.SENDER_EMAIL,
             to: req.user.email,
             subject: 'Hotel Booking Details',
-            html: `
-                <h2>Your Booking Details</h2>
-                <p>Dear ${req.user.username || 'Guest'},</p>
-                <p>Thank you for your booking! Here are your details:</p>
-                <ul>
-                    <li><strong>Booking ID:</strong> ${booking._id}</li>
-                    <li><strong>Guest Name:</strong> ${req.user.username || 'Guest'}</li>
-                    <li><strong>Hotel:</strong> ${roomData.hotel.name}</li>
-                    <li><strong>Room:</strong> ${roomData.roomType || 'Room'}</li>
-                    <li><strong>Booking Date:</strong> ${new Date(booking.createdAt).toLocaleString('en-GB', { timeZone: 'Asia/Bangkok' })}</li>
-                    <li><strong>Check-in:</strong> ${new Date(booking.checkInDate).toDateString()}</li>
-                    <li><strong>Check-out:</strong> ${new Date(booking.checkOutDate).toDateString()}</li>
-                    <li><strong>Date Total:</strong> ${nights} ${nights === 1 ? 'day' : 'days'}</li>
-                    <li><strong>Guests:</strong> ${booking.guests} (Adults: ${booking.adults}, Children: ${booking.children})</li>
-                    <li><strong>Booking Total:</strong> ${booking.totalPrice} ${process.env.CURRENCY || '฿'} (${roomData.pricePerNight} ${process.env.CURRENCY || '฿'} / night)</li>
-                </ul>
-                <p>We look forward to welcoming you!</p>
-            `,
+            html: createBookingEmailHtml({
+                booking,
+                guestName: req.user.username || 'Guest',
+                hotelName: roomData.hotel.name,
+                roomName: roomData.roomType || 'Room',
+                pricePerNight: roomData.pricePerNight,
+                title: 'Thank You for Your Booking!',
+                message: 'Thank you for your booking. Your reservation has been successfully created. We look forward to welcoming you!',
+                footer: 'This email confirms that your booking has been successfully created.',
+            }),
         }
 
         try {
@@ -209,32 +311,22 @@ export const cancelBooking = async (req, res) => {
 
         const roomData = booking.room
         const hotelData = booking.hotel || roomData?.hotel
-        const nights = Math.max(0, Math.ceil((new Date(booking.checkOutDate) - new Date(booking.checkInDate)) / (1000 * 60 * 60 * 24)))
-        const currency = process.env.CURRENCY || '฿'
 
         try {
             await transporter.sendMail({
                 from: process.env.SENDER_EMAIL,
                 to: req.user.email,
                 subject: 'Booking Cancellation Confirmation',
-                html: `
-                    <h2>Booking Cancellation Confirmation</h2>
-                    <p>Dear ${req.user.username || 'Guest'},</p>
-                    <p>Your booking removal has been processed. Details are below:</p>
-                    <ul>
-                        <li><strong>Booking ID:</strong> ${booking._id}</li>
-                        <li><strong>Guest Name:</strong> ${req.user.username || 'Guest'}</li>
-                        <li><strong>Hotel:</strong> ${hotelData?.name || 'Bupatara Chiangmai'}</li>
-                        <li><strong>Room:</strong> ${roomData?.roomType || 'Room'}</li>
-                        <li><strong>Booking Date:</strong> ${new Date(booking.createdAt).toLocaleString('en-GB', { timeZone: 'Asia/Bangkok' })}</li>
-                        <li><strong>Check-in:</strong> ${new Date(booking.checkInDate).toDateString()}</li>
-                        <li><strong>Check-out:</strong> ${new Date(booking.checkOutDate).toDateString()}</li>
-                        <li><strong>Date Total:</strong> ${nights} ${nights === 1 ? 'day' : 'days'}</li>
-                        <li><strong>Guests:</strong> ${booking.guests} (Adults: ${booking.adults}, Children: ${booking.children})</li>
-                        <li><strong>Booking Total:</strong> ${booking.totalPrice} ${currency} (${roomData?.pricePerNight || 0} ${currency} / night)</li>
-                    </ul>
-                    <p>If you did not request this action, please contact the hotel.</p>
-                `,
+                html: createBookingEmailHtml({
+                    booking,
+                    guestName: req.user.username || 'Guest',
+                    hotelName: hotelData?.name || 'Bupatara Chiangmai',
+                    roomName: roomData?.roomType || 'Room',
+                    pricePerNight: roomData?.pricePerNight || 0,
+                    title: 'Booking Cancellation Confirmation',
+                    message: 'Your booking removal has been processed successfully. The following booking has been cancelled.',
+                    footer: 'If you did not request this action, please contact the hotel.',
+                }),
             })
         } catch (mailError) {
             console.error('Booking cancellation email failed:', mailError.message)
