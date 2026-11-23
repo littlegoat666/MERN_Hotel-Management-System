@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { Sunrise, ShieldCheck } from 'lucide-react'
 
 const offers = [
     {
@@ -7,7 +8,7 @@ const offers = [
         category: 'CITY BREAK',
         title: 'Old City Discovery',
         subtitle: 'A few days to find your Chiang Mai favourites.',
-        description: 'A sample short-stay idea for travellers who want time for historic sights, neighbourhood cafés, and unhurried walks through the Old City.',
+        description: 'Take time for historic sights, neighbourhood cafés, and unhurried walks through the Old City.',
         image: 'https://images.unsplash.com/photo-1765833733487-0d72eeaaf8a6?auto=format&fit=crop&fm=jpg&ixlib=rb-4.1.0&q=80&w=1400',
         imageAlt: 'Historic temple architecture in Chiang Mai',
         details: ['Choose dates that leave room to explore', 'Compare available room types before booking', 'Keep a flexible plan for local discoveries'],
@@ -17,7 +18,7 @@ const offers = [
         category: 'LONG WEEKEND',
         title: 'Slow Days in Chiang Mai',
         subtitle: 'Stay curious, without filling every hour.',
-        description: 'A sample long-weekend theme built around relaxed mornings, local food, and a mix of well-known landmarks and quieter streets.',
+        description: 'Enjoy relaxed mornings, local food, and a mix of well-known landmarks and quieter streets.',
         image: 'https://www.weseektravel.com/wp-content/uploads/2024/03/cafe-chiang-mai-old-city-1-1024x667.jpg',
         imageAlt: 'A relaxed cafe courtyard in Chiang Mai Old City',
         details: ['Make a short list of must-see places', 'Leave time for cafés and markets', 'Check your exact check-in and check-out dates'],
@@ -27,7 +28,7 @@ const offers = [
         category: 'PLAN AHEAD',
         title: 'Your Next Northern Escape',
         subtitle: 'Start with the room, then shape the trip.',
-        description: 'An illustrative planning concept for guests who prefer to organise their trip early and choose a room that suits the size of their group.',
+        description: 'Plan ahead, choose a room that suits your group, and leave room for the places you want to discover.',
         image: 'https://images.trvl-media.com/lodging/9000000/8420000/8419900/8419876/b13e65d4.jpg?h=800&impolicy=fcrop&quality=medium&w=1200',
         imageAlt: 'Bright hotel bedroom with a city view',
         details: ['Review room capacity and listed amenities', 'Confirm the total for your selected dates', 'Keep your booking details available before arrival'],
@@ -37,7 +38,7 @@ const offers = [
         category: 'A LITTLE EXTRA TIME',
         title: 'Make a Day of It',
         subtitle: 'One more walk. One more local favourite.',
-        description: 'A sample itinerary idea for visitors who like to explore slowly, discover nearby food spots, and build a trip around their own interests.',
+        description: 'Explore at your own pace, discover nearby food spots, and build a trip around your own interests.',
         image: 'https://chiangmaibrief.com/images/featured/chiang-mai-street-in-early-cool-season-with-clear-.webp',
         imageAlt: 'A relaxed street-side cafe scene in Chiang Mai',
         details: ['Explore the Phra Sing neighbourhood', 'Use the map to plan your route', 'Check local opening times before setting out'],
@@ -51,23 +52,15 @@ const Offers = () => {
             {/* ------ Hero Section ------ */}
             <section className = 'bg-gradient-to-br from-[#F3E7DC] via-[#FFFDFA] to-[#F1E7DE] px-6 pb-16 pt-32 md:px-16 md:pb-20 md:pt-40 lg:px-24 xl:px-32'>
                 <div className = 'mx-auto max-w-6xl'>
-                    <p className = 'text-xs font-semibold uppercase tracking-[0.22em] text-[#A65F46] md:text-sm'>
-                        Bupatara Chiangmai · Stay ideas
-                    </p>
-
-                    <div className = 'mt-5 grid gap-10 md:grid-cols-[1fr_0.75fr] md:items-center'>
+                    <div className = 'grid gap-10 md:grid-cols-[1fr_0.75fr] md:items-center'>
                         <div>
                             <h1 className = 'max-w-3xl font-mali text-4xl leading-tight text-[#51443D] md:text-5xl lg:text-6xl'>
                                 A little inspiration for your next stay.
                             </h1>
 
                             <p className = 'mt-6 max-w-2xl text-base leading-8 text-[#817168] md:text-lg'>
-                                Explore sample offer concepts inspired by Chiang Mai’s Old City. Pick a travel mood, browse the rooms, and build a stay around the places you want to discover.
+                                Explore ideas for making the most of Chiang Mai’s Old City. Choose a travel mood, browse the rooms, and shape a stay around the places you want to discover.
                             </p>
-
-                            <Link to = '/rooms' className = 'mt-8 inline-flex rounded-full bg-[#B96F4D] px-7 py-3 text-sm font-medium text-white shadow-md shadow-[#B96F4D]/15 transition hover:-translate-y-0.5 hover:bg-[#9F5B40] hover:shadow-lg'>
-                                Explore Rooms
-                            </Link>
 
                             <div className = 'mt-8 flex items-center gap-3'>
                                 <span className = 'h-px w-10 bg-[#C47755]' />
@@ -90,11 +83,11 @@ const Offers = () => {
 
                             <div className = 'rounded-2xl border border-[#E8DDD3] bg-[#FFFDFA] p-5 shadow-sm md:p-6'>
                                 <p className = 'font-mali text-base font-semibold text-[#51443D]'>
-                                    A quick note
+                                    A little room to explore
                                 </p>
 
                                 <p className = 'mt-2 text-sm leading-6 text-[#918077]'>
-                                    The cards below are illustrative website content, not live discount codes or confirmed promotions. Prices and availability are shown only through the room and booking flow.
+                                    From peaceful mornings to lively market streets, make room in your itinerary for the experiences that make Chiang Mai yours.
                                 </p>
                             </div>
                         </div>
@@ -107,9 +100,10 @@ const Offers = () => {
                 <div className = 'mx-auto max-w-6xl'>
                     <div className = 'mb-9 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between'>
                         <div>
-                            <p className = 'text-xs font-semibold uppercase tracking-[0.2em] text-[#A65F46]'>
+                            <div className = 'mb-3 inline-flex items-center gap-2 rounded-full border border-[#D8B9A5] bg-[#EAD8CA] px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#A65F46] shadow-sm'>
+                                <Sunrise size = {15} />
                                 Choose your mood
-                            </p>
+                            </div>
 
                             <h2 className = 'mt-3 font-mali text-3xl text-[#51443D] md:text-4xl'>
                                 Stay ideas, made for exploring.
@@ -159,12 +153,6 @@ const Offers = () => {
                                             </li>
                                         )) }
                                     </ul>
-
-                                    <div className = 'mt-auto pt-7'>
-                                        <Link to = '/rooms' className = 'inline-flex items-center justify-center rounded-full border border-[#C47755] px-6 py-2.5 text-sm font-medium text-[#A65F46] transition hover:bg-[#B96F4D] hover:text-white'>
-                                            Explore Rooms
-                                        </Link>
-                                    </div>
                                 </div>
                             </article>
                         ))}
@@ -176,9 +164,10 @@ const Offers = () => {
             <section className = 'bg-[#F2E9E1] px-6 py-14 md:px-16 md:py-20 lg:px-24 xl:px-32'>
                 <div className = 'mx-auto grid max-w-6xl items-center gap-8 overflow-hidden rounded-[28px] border border-[#E8DDD3] bg-[#FFFDFA] shadow-sm md:grid-cols-2'>
                     <div className = 'p-7 md:p-10 lg:p-12'>
-                        <p className = 'text-xs font-semibold uppercase tracking-[0.2em] text-[#A65F46]'>
+                        <div className = 'mb-3 inline-flex items-center gap-2 rounded-full border border-[#D8B9A5] bg-[#EAD8CA] px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#A65F46] shadow-sm'>
+                            <ShieldCheck size = {15} />
                             Plan with confidence
-                        </p>
+                        </div>
 
                         <h2 className = 'mt-3 font-mali text-3xl text-[#51443D] md:text-4xl'>
                             Your dates make the difference.

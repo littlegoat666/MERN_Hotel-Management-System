@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Building2 } from 'lucide-react'
 import { assets } from '../assets/assets'
 import { useAppContext } from '../context/AppContext'
 
@@ -23,24 +24,37 @@ const Hero = () => {
 
         navigate(`/rooms?destination=${destination}`)
 
-            // Call Api to save recent searched city
+        // Call Api to save recent searched city
         await axios.post('/api/user/store-recent-search', { recentSearchedCity: destination }, { headers: { Authorization: `Bearer ${ await getToken() }` }})
 
-            // Add Destination to searchedCities max 3 recent searched cities
+        // Add Destination to searchedCities max 3 recent searched cities
         setSearchedCities((prevSearchedCities) => {
             const updatedSearchedCities = [ ...prevSearchedCities, destination ]
+
             if (updatedSearchedCities.length > 3) {
                 updatedSearchedCities.shift()
             }
+
             return updatedSearchedCities
         })
     }
 
     return (
         <div className = 'font-mali flex flex-col items-start justify-center px-6 md:px-16 lg:px-24 xl:px-32 text-black bg-[url("/src/assets/backgroundImage.png")] bg-no-repeat bg-cover bg-center h-screen'>
-            <p className = 'bg-[#49B9FF]/50 border border-[#55443B] px-3.5 py-1 rounded-full mt-20'> The Ultimate Hotel Experience </p>
-            <h1 className = 'font-mali text-[#black] text-2xl md:text-5xl md:text-[56px] md:leading-14px font-mali md:font-mali max-w-xl mt-4'> Discover Your Perfect Hotel Rooms </h1>
-            <p className = 'font-mali text-[#black] max-w-130 mt-2 text-sm md:text-base'> Discover Bupatara Chiangmai, a practical base in Chiang Mai's historic Old City. Explore nearby temples, local markets, and walking streets, then choose a room that fits your trip. </p>
+
+            <div className = 'mt-20 inline-flex items-center gap-2 rounded-full border border-[#D8B9A5] bg-[#EAD8CA] px-4 py-2 text-xs font-semibold tracking-[0.18em] text-[#A65F46] shadow-sm'>
+                <Building2 size = {15} />
+                A WARM WELCOME IN THE OLD CITY
+            </div>
+
+            <h1 className = 'font-mali text-[#black] text-2xl md:text-5xl md:text-[56px] md:leading-14px font-mali md:font-mali max-w-xl mt-4'>
+                Discover Your Perfect Hotel Rooms
+            </h1>
+
+            <p className = 'font-mali text-[#black] max-w-130 mt-2 text-sm md:text-base'>
+                Discover Bupatara Chiangmai, a practical base in Chiang Mai's historic Old City. Explore nearby temples, local markets, and walking streets, then choose a room that fits your trip.
+            </p>
+
             <form onSubmit = { onSearch } className = 'bg-white text-black-500 rounded-lg px-6 py-4 mt-8 flex flex-col md:flex-row max-md:items-start gap-4 max-md:mx-auto'>
 
                 <div>

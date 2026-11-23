@@ -11,13 +11,6 @@ const Footer = () => {
 
                     {/* HOTEL INFORMATION */}
                     <div className = 'max-w-sm'>
-                        <div className = 'mb-5 inline-flex items-center gap-2 rounded-full border border-[#E7DAD0] bg-[#FAF7F2] px-3 py-1.5'>
-                            <span className = 'h-1.5 w-1.5 rounded-full bg-[#A96F58]' />
-                            <span className = 'text-[10px] font-semibold tracking-[0.18em] text-[#A96F58]'>
-                                BUPATARA CHIANGMAI
-                            </span>
-                        </div>
-
                         <img src = { assets.logo } alt = 'Bupatara Chiangmai' className = 'mb-4 h-8 object-contain opacity-90 md:h-9' />
 
                         <p className = 'text-sm leading-7 text-[#8C7A70]'>

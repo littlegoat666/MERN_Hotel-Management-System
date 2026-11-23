@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Compass, MapPinned } from 'lucide-react'
 
 const values = [
     { number: '01', title: 'A well-placed base', description: 'Set in Chiang Mai’s Phra Sing area, Bupatara gives travellers a practical starting point for exploring the Old City, nearby temples, local food, and everyday neighbourhood life.', image: 'https://www.momondo.com/rimg/himg/85/bd/0d/expedia_group-616838-150293966-178019.jpg?crop=true&height=607&width=968', imageAlt: 'Bupatara hotel reception and lobby' },
@@ -24,23 +24,13 @@ const AboutUs = () => {
 
                 <div className = 'relative mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[1.15fr_0.85fr]'>
                     <div>
-                        <p className = 'text-xs font-semibold uppercase tracking-[0.22em] text-[#A65F46] md:text-sm'>
-                            Bupatara Chiangmai · Chiang Mai, Thailand
-                        </p>
-
-                        <h1 className = 'mt-5 max-w-3xl font-mali text-4xl leading-tight text-[#51443D] md:text-5xl lg:text-6xl'>
+                        <h1 className = 'mt-0 max-w-3xl font-mali text-4xl leading-tight text-[#51443D] md:text-5xl lg:text-6xl'>
                             A comfortable base for discovering the Old City.
                         </h1>
 
                         <p className = 'mt-6 max-w-2xl text-base leading-8 text-[#817168] md:text-lg'>
                             Welcome to Bupatara Chiangmai, a place to pause between city adventures. Located on Phra Pok Klao Road Soi 4 in the Phra Sing neighbourhood, the hotel puts you in a useful position for exploring Chiang Mai at your own pace.
                         </p>
-
-                        <div className = 'mt-8 flex flex-wrap gap-3'>
-                            <Link to = '/rooms' className = 'rounded-full bg-[#B96F4D] px-7 py-3 text-sm font-medium text-white shadow-md shadow-[#B96F4D]/15 transition hover:-translate-y-0.5 hover:bg-[#9F5B40] hover:shadow-lg'>
-                                Explore Rooms
-                            </Link>
-                        </div>
 
                         <div className = 'mt-9 flex items-center gap-3'>
                             <span className = 'h-px w-10 bg-[#C47755]' />
@@ -56,7 +46,7 @@ const AboutUs = () => {
                         <div className = 'absolute inset-0 bg-gradient-to-t from-[#2E211B]/85 via-[#2E211B]/10 to-transparent' />
 
                         <div className = 'absolute inset-x-0 bottom-0 p-6 text-white md:p-8'>
-                            <p className = 'text-xs font-semibold uppercase tracking-[0.2em] text-[#white]'>The Bupatara point of view</p>
+                            <p className = 'text-xs font-semibold uppercase tracking-[0.2em] text-white'>The Bupatara point of view</p>
 
                             <p className = 'mt-3 max-w-lg font-mali text-2xl leading-relaxed md:text-3xl'>
                                 “See more of Chiang Mai. Leave a little room for the unexpected.”
@@ -74,9 +64,10 @@ const AboutUs = () => {
             <section className = 'px-6 py-16 md:px-16 md:py-20 lg:px-24 xl:px-32'>
                 <div className = 'mx-auto max-w-6xl'>
                     <div className = 'max-w-3xl'>
-                        <p className = 'text-xs font-semibold uppercase tracking-[0.2em] text-[#B47757]'>
+                        <div className = 'mb-3 inline-flex items-center gap-2 rounded-full border border-[#D8B9A5] bg-[#EAD8CA] px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#A65F46] shadow-sm'>
+                            <Compass size = {15} />
                             Our approach
-                        </p>
+                        </div>
 
                         <h2 className = 'mt-3 font-mali text-3xl text-[#51443D] md:text-4xl'>
                             A neighbourhood stay, with space to explore.
@@ -118,9 +109,10 @@ const AboutUs = () => {
             <section className = 'bg-[#F2E9E1] px-6 py-16 md:px-16 md:py-20 lg:px-24 xl:px-32'>
                 <div className = 'mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.8fr_1.2fr]'>
                     <div>
-                        <p className = 'text-xs font-semibold uppercase tracking-[0.2em] text-[#A65F46]'>
+                        <div className = 'mb-3 inline-flex items-center gap-2 rounded-full border border-[#D8B9A5] bg-[#EAD8CA] px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#A65F46] shadow-sm'>
+                            <MapPinned size = {15} />
                             Beyond the room
-                        </p>
+                        </div>
 
                         <h2 className = 'mt-3 font-mali text-3xl text-[#51443D] md:text-4xl'>
                             Make Chiang Mai part of the stay.
@@ -149,33 +141,6 @@ const AboutUs = () => {
                                 </div>
                             </article>
                         ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* ------ Browse Rooms CTA ------ */}
-            <section className = 'px-6 py-16 md:px-16 md:py-20 lg:px-24 xl:px-32'>
-                <div className = 'mx-auto grid max-w-6xl items-center gap-8 overflow-hidden rounded-[28px] border border-[#E8DDD3] bg-[#F5EAE1] shadow-sm md:grid-cols-2'>
-                    <div className = 'p-7 md:p-10 lg:p-12'>
-                        <p className = 'text-xs font-semibold uppercase tracking-[0.2em] text-[#A65F46]'>
-                            Your Chiang Mai stay
-                        </p>
-
-                        <h2 className = 'mt-3 font-mali text-3xl text-[#51443D] md:text-4xl'>
-                            Find a room that fits your plans.
-                        </h2>
-
-                        <p className = 'mt-4 leading-7 text-[#817168]'>
-                            Compare available room types, nightly rates, and the amenities listed for each room before booking.
-                        </p>
-
-                        <Link to = '/rooms' className = 'mt-7 inline-flex rounded-full bg-[#B96F4D] px-7 py-3 text-sm font-medium text-white shadow-md shadow-[#B96F4D]/15 transition hover:-translate-y-0.5 hover:bg-[#9F5B40]'>
-                            Browse Rooms
-                        </Link>
-                    </div>
-
-                    <div className = 'h-64 overflow-hidden md:h-full md:min-h-[320px]'>
-                        <img src = 'https://images.trvl-media.com/lodging/9000000/8420000/8419900/8419876/b13e65d4.jpg?h=800&impolicy=fcrop&quality=medium&w=1200' alt = 'Bright hotel room with a balcony view' loading = 'lazy' className = 'h-full w-full object-cover' />
                     </div>
                 </div>
             </section>

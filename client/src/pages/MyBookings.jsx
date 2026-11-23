@@ -93,20 +93,15 @@ const MyBookings = () => {
                     <div key = { booking._id } className = 'grid grid-cols-1 md:grid-cols-[3fr_2fr_1fr] w-full border-b border-[#E5DAD0] py-6 first:border-t'>
 
                         {/* ------ Room Details ------ */}
-                        <div className = 'flex flex-col md:flex-row items-start'>
+                        <div className = 'flex flex-col md:flex-row items-start md:items-center'>
                             <img
                                 src = { booking.room.images[0] }
                                 alt = 'hotel-img'
                                 className = 'md:w-52 md:h-44 rounded shadow object-contain bg-[#F5EEE7] flex-shrink-0'
                             />
 
-                            <div className = 'flex flex-col gap-1.5 max-md:mt-3 md:ml-5'>
+                            <div className = 'flex flex-col justify-center gap-1.5 max-md:mt-3 md:ml-5'>
                                 <p className = 'font-mali text-2xl text-[#51443D]'>{ booking.room.roomType }</p>
-
-                                <div className = 'flex items-center gap-1 text-sm text-[#918077]'>
-                                    <img src = { assets.locationIcon } alt = 'hotel-img' />
-                                    <span>{ booking.hotel.address }</span>
-                                </div>
 
                                 <div className = 'flex items-center gap-1 text-sm text-[#918077]'>
                                     <img src = { assets.guestsIcon } alt = 'guests-icon' />

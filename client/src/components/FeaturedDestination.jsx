@@ -6,13 +6,13 @@ import { ArrowRight, Sparkles } from 'lucide-react'
 
 const FeaturedDestination = () => {
 
-    const { rooms, navigate } = useAppContext();
+    const { rooms, navigate } = useAppContext()
 
     return rooms.length > 0 && (
         <section className = 'bg-[#FAF7F2] px-6 py-20 md:px-16 md:py-24 lg:px-24 xl:px-32'>
             <div className = 'mx-auto flex max-w-7xl flex-col items-center'>
 
-                <div className = 'mb-3 flex items-center gap-2 rounded-full bg-[#F2E5DC] px-4 py-2 text-xs font-semibold tracking-wider text-[#A96F58]'>
+                <div className = 'mb-3 inline-flex items-center gap-2 rounded-full border border-[#D8B9A5] bg-[#EAD8CA] px-4 py-2 text-xs font-semibold tracking-[0.18em] text-[#A65F46] shadow-sm'>
                     <Sparkles size = {15} />
                     A PLACE TO STAY
                 </div>

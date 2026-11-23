@@ -1,9 +1,29 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { assets, facilityIcons, roomCommonData } from '../assets/assets'
+import {
+    Wifi, Coffee, Bell, Mountain, Waves, TreePine,
+    Camera, Sofa, Car, Cigarette, Accessibility
+} from 'lucide-react'
+import { assets, roomCommonData } from '../assets/assets'
 import StarRating from '../components/StarRating'
 import { useAppContext } from '../context/AppContext'
 import toast from 'react-hot-toast'
+
+const amenityIcons = {
+    'Free Wi-Fi': { icon: Wifi, color: 'bg-sky-50 text-sky-700' },
+    'Free Wifi': { icon: Wifi, color: 'bg-sky-50 text-sky-700' },
+    'Free WiFi': { icon: Wifi, color: 'bg-sky-50 text-sky-700' },
+    'Free Breakfast': { icon: Coffee, color: 'bg-amber-50 text-amber-700' },
+    'Room Service': { icon: Bell, color: 'bg-violet-50 text-violet-700' },
+    'Mountain View': { icon: Mountain, color: 'bg-emerald-50 text-emerald-700' },
+    'Pool Access': { icon: Waves, color: 'bg-cyan-50 text-cyan-700' },
+    'Garden': { icon: TreePine, color: 'bg-green-50 text-green-700' },
+    'Security Cameras': { icon: Camera, color: 'bg-indigo-50 text-indigo-700' },
+    'Furniture Included': { icon: Sofa, color: 'bg-orange-50 text-orange-700' },
+    'Parking': { icon: Car, color: 'bg-blue-50 text-blue-700' },
+    'Smoking Area': { icon: Cigarette, color: 'bg-stone-100 text-stone-700' },
+    'Accessible to Disabled': { icon: Accessibility, color: 'bg-rose-50 text-rose-700' },
+}
 
 const RoomDetails = () => {
     const { id } = useParams()
@@ -142,14 +162,22 @@ const RoomDetails = () => {
             {/* Room Highlights */}
             <div className = 'flex flex-col md:flex-row md:justify-between mt-10'>
                 <div className = 'flex flex-col'>
-                    <h1 className = 'text-3xl md:text-4xl font-mali text-[#55443B]'> Experience Luxury Like Never Before </h1>
-                    <div className = 'grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 mt-3 mb-6 gap-3'>
-                        { room.amenities.map((item, index) => (
-                            <div key = { index } className = 'flex items-center gap-2 px-3 py-2 rounded-lg bg-[#F5EEE7] min-w-0 text-[#55443B]'>
-                                <img src = {facilityIcons[ item ]} alt = { item } className = 'w-5 h-5' />
-                                <p className = 'text-xs'>{ item }</p>
-                            </div>
-                        ))}
+                    <h1 className = 'text-3xl md:text-4xl font-mali text-[#55443B]'>
+                        Experience Luxury Like Never Before
+                    </h1>
+
+                    <div className = 'flex flex-wrap items-center mt-3 mb-6 gap-2'>
+                        { room.amenities.map((item, index) => {
+                            const amenity = amenityIcons[item]
+                            const Icon = amenity?.icon
+
+                            return (
+                                <div key = { index } className = {`flex items-center gap-1.5 px-3 py-2 rounded-full ${amenity?.color || 'bg-[#F2E9E1] text-[#8C7A70]'}`}>
+                                    { Icon && <Icon size = {15} strokeWidth = {2} /> }
+                                    <p className = 'text-xs font-mali'>{ item }</p>
+                                </div>
+                            )
+                        })}
                     </div>
                 </div>
 
@@ -322,7 +350,9 @@ const RoomDetails = () => {
             </div>
 
             <div className = 'max-w-3xl border-y border-[#E7DAD0] my-15 py-10 text-[#8C7A70]'>
-                <p> Bupatara Chiangmai is in Chiang Mai's historic Old City, a convenient area for exploring local temples, markets, and walking streets. Room facilities can vary, so review the details for your selected room before booking. </p>
+                <p>
+                    Bupatara Chiangmai is in Chiang Mai's historic Old City, a convenient area for exploring local temples, markets, and walking streets. Room facilities can vary, so review the details for your selected room before booking.
+                </p>
             </div>
 
             {/* Hosted By */}
@@ -339,7 +369,9 @@ const RoomDetails = () => {
                 </div>
             </div>
 
-            <button className = 'px-6 py-2.5 mt-4 rounded text-white bg-[#A96F58] hover:bg-[#8F5946] transition-all cursor-pointer'> Contact Now </button>
+            <button className = 'px-6 py-2.5 mt-4 rounded text-white bg-[#A96F58] hover:bg-[#8F5946] transition-all cursor-pointer'>
+                Contact Now
+            </button>
 
         </div>
     )

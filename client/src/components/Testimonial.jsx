@@ -2,19 +2,23 @@ import React from 'react'
 import Title from './Title'
 import { testimonials } from '../assets/assets'
 import StarRating from './StarRating'
-import { Quote } from 'lucide-react'
+import { MessagesSquare, Quote } from 'lucide-react'
 
 const Testimonial = () => {
     return (
         <section className = 'bg-[#FAF7F2] px-6 py-20 md:px-16 md:py-24 lg:px-24 xl:px-32'>
             <div className = 'mx-auto flex max-w-7xl flex-col items-center'>
 
-                <p className = 'mb-3 rounded-full bg-[#F2E5DC] px-4 py-2 text-xs font-semibold tracking-[0.16em] text-[#A96F58]'>
+                <div className = 'mb-3 inline-flex items-center gap-2 rounded-full border border-[#D8B9A5] bg-[#EAD8CA] px-4 py-2 text-xs font-semibold tracking-[0.18em] text-[#A65F46] shadow-sm'>
+                    <MessagesSquare size = {15} />
                     GUEST EXPERIENCES
-                </p>
+                </div>
 
                 <div className = '[&_h1]:!text-[#55443B] [&_h2]:!text-[#55443B] [&_p]:!text-[#8C7A70]'>
-                    <Title title = 'Guest Feedback Preview' subTitle = "The feedback cards below are illustrative demo content for this website preview, not verified reviews from actual Bupatara guests." />
+                    <Title
+                        title = 'Guest Stories'
+                        subTitle = 'Thoughtful details, a welcoming atmosphere, and time well spent can make every visit to Chiang Mai memorable.'
+                    />
                 </div>
 
                 <div className = 'mt-12 grid w-full grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3'>
@@ -46,7 +50,7 @@ const Testimonial = () => {
 
                             <div className = 'mt-6 border-t border-[#E7DAD0] pt-4'>
                                 <span className = 'text-xs font-medium tracking-wide text-[#A96F58]'>
-                                    GUEST FEEDBACK PREVIEW
+                                    GUEST STORY
                                 </span>
                             </div>
                         </article>
