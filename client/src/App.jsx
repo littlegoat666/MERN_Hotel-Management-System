@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Navbar from './components/Navbar'
 import { Route, Routes, useLocation } from 'react-router-dom'
 
@@ -24,11 +24,27 @@ import ExportReports from './pages/hotelOwner/ExportReports'
 import { Toaster } from 'react-hot-toast'
 import { useAppContext } from './context/AppContext.jsx'
 import Loader from './components/Loader.jsx'
+import { startTranslationObserver, translateDocument } from './i18n/translator'
 
 const App = () => {
     const { pathname } = useLocation()
     const isOwnerPath = pathname.startsWith('/owner')
-    const { showHotelReg } = useAppContext()
+    const isDashboard = pathname === '/owner' || pathname === '/owner/'
+    const isPaymentPath = /\/(payment|payments|checkout)(\/|$|-)/i.test(pathname)
+
+    const { showHotelReg, language } = useAppContext()
+
+    useEffect(() => {
+        if (isDashboard || isPaymentPath) {
+            translateDocument('en')
+            document.documentElement.lang = 'en'
+            return undefined
+        }
+
+        document.documentElement.lang = language === 'zh' ? 'zh-CN' : language
+
+        return startTranslationObserver(language)
+    }, [ language, pathname, isDashboard, isPaymentPath ])
 
     return (
         <div className = { isOwnerPath ? 'min-h-screen' : '' }>

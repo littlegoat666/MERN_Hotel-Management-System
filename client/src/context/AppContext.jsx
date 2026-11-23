@@ -8,6 +8,20 @@ axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL
 
 const AppContext = createContext()
 
+const supportedLanguages = [ 'en', 'th', 'zh', 'ja' ]
+
+const getSavedLanguage = () => {
+    try {
+        const savedLanguage = localStorage.getItem('bupatara-language')
+
+        return supportedLanguages.includes(savedLanguage)
+            ? savedLanguage
+            : 'en'
+    } catch {
+        return 'en'
+    }
+}
+
 export const AppProvider = ({ children }) => {
     const currency = '฿'
     const navigate = useNavigate()
@@ -19,6 +33,21 @@ export const AppProvider = ({ children }) => {
     const [ showHotelReg, setShowHotelReg ] = useState(false)
     const [ searchedCities, setSearchedCities ] = useState([])
     const [ rooms, setRooms ] = useState([])
+    const [ language, setLanguageState ] = useState(getSavedLanguage)
+
+    const setLanguage = (nextLanguage) => {
+        const normalizedLanguage = String(nextLanguage || '').toLowerCase()
+
+        if (!supportedLanguages.includes(normalizedLanguage)) return
+
+        try {
+            localStorage.setItem('bupatara-language', normalizedLanguage)
+        } catch (error) {
+            console.error('Unable to save language preference:', error)
+        }
+
+        setLanguageState(normalizedLanguage)
+    }
 
     const fetchRooms = async () => {
         try {
@@ -33,6 +62,10 @@ export const AppProvider = ({ children }) => {
             toast.error(error.message)
         }
     }
+
+    useEffect(() => {
+        document.documentElement.lang = language === 'zh' ? 'zh-CN' : language
+    }, [ language ])
 
     useEffect(() => {
         if (!isLoaded) return
@@ -107,6 +140,8 @@ export const AppProvider = ({ children }) => {
         rooms,
         setRooms,
         fetchRooms,
+        language,
+        setLanguage,
     }
 
     return (
