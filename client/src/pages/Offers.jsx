@@ -71,7 +71,7 @@ const Offers = () => {
                         </div>
 
                         <div className = 'space-y-4'>
-                            <div className = 'group relative h-56 overflow-hidden rounded-[26px] border-[5px] border-white/80 shadow-xl shadow-[#725747]/15 md:h-64'>
+                            <div className = 'group relative h-56 overflow-hidden rounded-[26px] border border-[#B8C2CC] shadow-xl shadow-[#725747]/15 transition-colors hover:border-[#8795A3] md:h-64'>
                                 <img src = 'https://images.unsplash.com/photo-1765833733487-0d72eeaaf8a6?auto=format&fit=crop&fm=jpg&ixlib=rb-4.1.0&q=80&w=1400' alt = 'Historic temple spires in Chiang Mai' loading = 'lazy' className = 'h-full w-full object-cover transition duration-700 group-hover:scale-105' />
 
                                 <div className = 'absolute inset-0 bg-gradient-to-t from-[#2E211B]/75 via-transparent to-transparent' />

@@ -460,7 +460,7 @@ const Gallery = () => {
                                 type = 'button'
                                 onClick = {() => setActiveImageId(image.id)}
                                 aria-label = {`View ${image.title}`}
-                                className = {`group relative overflow-hidden rounded-[22px] bg-[#E9DDD3] text-left shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-[#725747]/15 focus:outline-none focus:ring-4 focus:ring-[#C47755]/30 ${
+                                className = {`group relative overflow-hidden rounded-[22px] border border-[#B8C2CC] bg-[#E9DDD3] text-left shadow-sm transition duration-300 hover:-translate-y-1 hover:border-[#8795A3] hover:shadow-xl hover:shadow-[#725747]/15 focus:outline-none focus:ring-4 focus:ring-[#B8C2CC]/30 ${
                                     index === 0 ? 'sm:col-span-2 lg:row-span-2' : ''
                                 }`}
                             >

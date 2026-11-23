@@ -27,12 +27,12 @@ const HotelLocation = () => {
                 <div className = 'grid grid-cols-1 items-stretch gap-6 lg:grid-cols-[1.5fr_1fr]'>
 
                     {/* Google Maps */}
-                    <div className = 'overflow-hidden rounded-[24px] border-[5px] border-white bg-white shadow-lg shadow-[#725747]/10'>
+                    <div className = 'overflow-hidden rounded-[24px] border border-[#B8C2CC] bg-white shadow-lg shadow-[#725747]/10 transition-colors hover:border-[#8795A3]'>
                         <iframe title = 'Bupatara Chiangmai location on Google Maps' src = { mapUrl } className = 'block h-[320px] w-full md:h-[420px]' loading = 'lazy' allowFullScreen referrerPolicy = 'strict-origin-when-cross-origin' />
                     </div>
 
                     {/* Contact Details */}
-                    <div className = 'flex flex-col justify-center rounded-[24px] border border-[#E8DDD3] bg-[#FFFDFA] p-6 shadow-sm md:p-8'>
+                    <div className = 'flex flex-col justify-center rounded-[24px] border border-[#B8C2CC] bg-[#FFFDFA] p-6 shadow-sm transition-colors hover:border-[#8795A3] md:p-8'>
                         <p className = 'text-xs font-semibold uppercase tracking-[0.18em] text-[#A65F46]'>
                             Contact & Directions
                         </p>
@@ -51,7 +51,7 @@ const HotelLocation = () => {
                             </p>
                         </div>
 
-                        <div className = 'mt-5 flex items-center gap-3 border-t border-[#F0E5DC] pt-5'>
+                        <div className = 'mt-5 flex items-center gap-3 border-t border-[#B8C2CC] pt-5'>
                             <span className = 'flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#EAF4EC] text-[#668F70]'>
                                 <Phone size = {18} />
                             </span>

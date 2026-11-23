@@ -40,7 +40,7 @@ const AboutUs = () => {
                         </div>
                     </div>
 
-                    <div className = 'group relative min-h-[340px] overflow-hidden rounded-[28px] border-[6px] border-white/70 shadow-xl shadow-[#725747]/15 md:min-h-[470px]'>
+                    <div className = 'group relative min-h-[340px] overflow-hidden rounded-[28px] border border-[#B8C2CC] shadow-xl shadow-[#725747]/15 transition-colors hover:border-[#8795A3] md:min-h-[470px]'>
                         <img src = 'https://cf.bstatic.com/xdata/images/hotel/max1024x768/611716159.jpg?k=e637a02e71e57efad7f41deec8eb11b9a6318fd85f85b140ba03bb4e0f4c9b82&o=' alt = 'Exterior of Hotel O Bupatara Chiangmai' loading = 'lazy' className = 'absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105' />
 
                         <div className = 'absolute inset-0 bg-gradient-to-t from-[#2E211B]/85 via-[#2E211B]/10 to-transparent' />

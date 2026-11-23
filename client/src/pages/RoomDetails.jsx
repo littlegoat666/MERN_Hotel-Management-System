@@ -149,12 +149,18 @@ const RoomDetails = () => {
             {/* Room Images */}
             <div className = 'flex flex-col lg:flex-row mt-6 gap-6'>
                 <div className = 'lg:w-1/2 w-full'>
-                    <img src = { mainImage } alt = 'Room Image' className = 'w-full aspect-[4/3] rounded-xl shadow-lg object-contain bg-[#F5EEE7]' />
+                    <img src = { mainImage } alt = 'Room Image' className = 'w-full aspect-[4/3] rounded-xl border border-[#B8C2CC] shadow-lg object-contain bg-[#F5EEE7] transition-colors hover:border-[#8795A3]' />
                 </div>
 
                 <div className = 'grid grid-cols-2 gap-4 lg:w-1/2 w-full'>
                     { room?.images.length > 1 && room.images.map((image, index) => (
-                        <img onClick = {() => setMainImage(image)} key = { index } src = { image } alt = 'Room Image' className = {`w-full aspect-[4/3] rounded-xl shadow-md object-contain bg-[#F5EEE7] cursor-pointer ${mainImage === image && 'outline-3 outline-[#A96F58]'}`} />
+                        <img
+                            onClick = {() => setMainImage(image)}
+                            key = { index }
+                            src = { image }
+                            alt = 'Room Image'
+                            className = {`w-full aspect-[4/3] rounded-xl border-2 shadow-md object-contain bg-[#F5EEE7] cursor-pointer transition-all hover:border-[#8795A3] ${mainImage === image ? 'border-[#8795A3] ring-2 ring-[#B8C2CC]' : 'border-[#B8C2CC]'}`}
+                        />
                     ))}
                 </div>
             </div>
@@ -186,33 +192,33 @@ const RoomDetails = () => {
             </div>
 
             {/* CheckIn CheckOut Form */}
-            <form onSubmit = { onSubmitHandler } className = 'flex flex-col md:flex-row items-start md:items-center justify-between bg-[#FAF7F2] shadow-[0px_0px_20px_rgba(85,68,59,0.12)] p-6 rounded-xl mx-auto mt-16 max-w-6xl border border-[#E7DAD0]'>
+            <form onSubmit = { onSubmitHandler } className = 'flex flex-col md:flex-row items-start md:items-center justify-between bg-[#FAF7F2] shadow-[0px_0px_20px_rgba(85,68,59,0.12)] p-6 rounded-xl mx-auto mt-16 max-w-6xl border border-[#B8C2CC] transition-colors hover:border-[#8795A3]'>
 
                 <div className = 'flex flex-col flex-wrap md:flex-row items-start md:items-center gap-4 md:gap-10 text-[#8C7A70]'>
                     <div className = 'flex flex-col'>
                         <label htmlFor = 'checkInDate' className = 'font-mali text-[#55443B]'> Check-In </label>
-                        <input onChange = { (e) => { setCheckInDate(e.target.value); setIsAvailable(false) }} min = { new Date().toISOString().split('T')[0] } type = 'date' id = 'checkInDate' placeholder = 'Check-In' className = 'w-full rounded border border-[#E7DAD0] px-3 py-2 mt-1.5 outline-none text-[#55443B] bg-white focus:border-[#A96F58]' required/>
+                        <input onChange = { (e) => { setCheckInDate(e.target.value); setIsAvailable(false) }} min = { new Date().toISOString().split('T')[0] } type = 'date' id = 'checkInDate' placeholder = 'Check-In' className = 'w-full rounded border border-[#B8C2CC] px-3 py-2 mt-1.5 outline-none text-[#55443B] bg-white focus:border-[#8795A3] focus:ring-2 focus:ring-[#B8C2CC]/30' required/>
                     </div>
 
-                    <div className = 'w-px h-15 bg-[#E7DAD0] max-md:hidden'></div>
+                    <div className = 'w-px h-15 bg-[#B8C2CC] max-md:hidden'></div>
 
                     <div className = 'flex flex-col'>
                         <label htmlFor = 'checkOutDate' className = 'font-mali text-[#55443B]'> Check-Out </label>
-                        <input onChange = { (e) => { setCheckOutDate(e.target.value); setIsAvailable(false) }} min = { checkInDate } disabled = { !checkInDate } type = 'date' id = 'checkOutDate' placeholder = 'Check-Out' className = 'w-full rounded border border-[#E7DAD0] px-3 py-2 mt-1.5 outline-none text-[#55443B] bg-white focus:border-[#A96F58]' required/>
+                        <input onChange = { (e) => { setCheckOutDate(e.target.value); setIsAvailable(false) }} min = { checkInDate } disabled = { !checkInDate } type = 'date' id = 'checkOutDate' placeholder = 'Check-Out' className = 'w-full rounded border border-[#B8C2CC] px-3 py-2 mt-1.5 outline-none text-[#55443B] bg-white focus:border-[#8795A3] focus:ring-2 focus:ring-[#B8C2CC]/30' required/>
                     </div>
 
-                    <div className = 'w-px h-15 bg-[#E7DAD0] max-md:hidden'></div>
+                    <div className = 'w-px h-15 bg-[#B8C2CC] max-md:hidden'></div>
 
                     <div className = 'flex flex-col'>
                         <label htmlFor = 'adults' className = 'font-mali text-[#55443B]'> Adults </label>
-                        <input onChange = { (e) => { setAdults(e.target.value === '' ? '' : Number(e.target.value)); setIsAvailable(false) }} value = { adults } min = {1} max = {4} type = 'number' id = 'adults' placeholder = '0' className = 'max-w-20 rounded border border-[#E7DAD0] px-3 py-2 mt-1.5 outline-none text-[#55443B] bg-white focus:border-[#A96F58]' required/>
+                        <input onChange = { (e) => { setAdults(e.target.value === '' ? '' : Number(e.target.value)); setIsAvailable(false) }} value = { adults } min = {1} max = {4} type = 'number' id = 'adults' placeholder = '0' className = 'max-w-20 rounded border border-[#B8C2CC] px-3 py-2 mt-1.5 outline-none text-[#55443B] bg-white focus:border-[#8795A3] focus:ring-2 focus:ring-[#B8C2CC]/30' required/>
                     </div>
 
-                    <div className = 'w-px h-15 bg-[#E7DAD0] max-md:hidden'></div>
+                    <div className = 'w-px h-15 bg-[#B8C2CC] max-md:hidden'></div>
 
                     <div className = 'flex flex-col'>
                         <label htmlFor = 'children' className = 'font-mali text-[#55443B]'> Children </label>
-                        <input onChange = { (e) => { setChildren(e.target.value === '' ? '' : Number(e.target.value)); setIsAvailable(false) }} value = { children } min = {0} max = {3} type = 'number' id = 'children' placeholder = '0' className = 'max-w-20 rounded border border-[#E7DAD0] px-3 py-2 mt-1.5 outline-none text-[#55443B] bg-white focus:border-[#A96F58]' required/>
+                        <input onChange = { (e) => { setChildren(e.target.value === '' ? '' : Number(e.target.value)); setIsAvailable(false) }} value = { children } min = {0} max = {3} type = 'number' id = 'children' placeholder = '0' className = 'max-w-20 rounded border border-[#B8C2CC] px-3 py-2 mt-1.5 outline-none text-[#55443B] bg-white focus:border-[#8795A3] focus:ring-2 focus:ring-[#B8C2CC]/30' required/>
                     </div>
                 </div>
 
@@ -224,7 +230,7 @@ const RoomDetails = () => {
             {/* Booking Confirmation Popup */}
             { showBookingConfirmation && (
                 <div onClick = { (e) => e.target === e.currentTarget && setShowBookingConfirmation(false) } className = 'fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 py-6'>
-                    <div role = 'dialog' aria-modal = 'true' aria-labelledby = 'booking-confirmation-title' className = 'w-full max-w-5xl rounded-2xl border border-[#E7DAD0] bg-[#FFFDFA] shadow-2xl overflow-hidden'>
+                    <div role = 'dialog' aria-modal = 'true' aria-labelledby = 'booking-confirmation-title' className = 'w-full max-w-5xl rounded-2xl border border-[#B8C2CC] bg-[#FFFDFA] shadow-2xl overflow-hidden'>
 
                         {/* Header */}
                         <div className = 'px-6 pt-6 md:px-9 md:pt-8'>
@@ -240,7 +246,7 @@ const RoomDetails = () => {
                         <div className = 'flex flex-col md:flex-row gap-8 px-6 py-7 md:px-9 md:py-8'>
 
                             {/* Room Image */}
-                            <div className = 'w-full md:w-[48%] flex items-center justify-center rounded-xl bg-[#F5EEE7] p-3'>
+                            <div className = 'w-full md:w-[48%] flex items-center justify-center rounded-xl border border-[#B8C2CC] bg-[#F5EEE7] p-3'>
                                 <img
                                     src = { mainImage }
                                     alt = { room.roomType }
@@ -290,7 +296,7 @@ const RoomDetails = () => {
                                 </div>
 
                                 {/* Price */}
-                                <div className = 'border-t border-[#E7DAD0] mt-6 pt-5'>
+                                <div className = 'border-t border-[#B8C2CC] mt-6 pt-5'>
                                     <div className = 'flex justify-between items-center'>
                                         <p className = 'text-sm text-[#8C7A70]'>
                                             Price / Night
@@ -314,11 +320,11 @@ const RoomDetails = () => {
                         </div>
 
                         {/* Confirmation Buttons */}
-                        <div className = 'flex flex-col-reverse sm:flex-row justify-end gap-3 border-t border-[#E7DAD0] bg-[#FAF7F2] px-6 py-5 md:px-9'>
+                        <div className = 'flex flex-col-reverse sm:flex-row justify-end gap-3 border-t border-[#B8C2CC] bg-[#FAF7F2] px-6 py-5 md:px-9'>
                             <button
                                 type = 'button'
                                 onClick = { () => setShowBookingConfirmation(false) }
-                                className = 'rounded-lg border border-[#D9C9BD] bg-white px-7 py-3 font-mali text-[#55443B] transition-all hover:bg-[#F5EEE7]'
+                                className = 'rounded-lg border border-[#B8C2CC] bg-white px-7 py-3 font-mali text-[#55443B] transition-all hover:border-[#8795A3] hover:bg-[#F5EEE7]'
                             >
                                 Back to Edit
                             </button>
@@ -349,7 +355,7 @@ const RoomDetails = () => {
                 ))}
             </div>
 
-            <div className = 'max-w-3xl border-y border-[#E7DAD0] my-15 py-10 text-[#8C7A70]'>
+            <div className = 'max-w-3xl border-y border-[#B8C2CC] my-15 py-10 text-[#8C7A70]'>
                 <p>
                     Bupatara Chiangmai is in Chiang Mai's historic Old City, a convenient area for exploring local temples, markets, and walking streets. Room facilities can vary, so review the details for your selected room before booking.
                 </p>

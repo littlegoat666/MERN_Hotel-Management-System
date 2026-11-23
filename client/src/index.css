@@ -7,10 +7,41 @@
     --color-secondary: #FBBF24;
 }
 
-*{
+* {
     font-family: 'Mali', cursive;
 }
 
 .font-mali {
     font-family: 'Mali' !important;
+}
+
+/* Customer page borders */
+[class~="border-[#E7DAD0]"],
+[class~="border-[#E8DDD3]"],
+[class~="border-[#F0E5DC]"],
+[class~="border-[#D8C3B6]"],
+[class~="border-[#D8B9A5]"],
+[class~="border-gray-200"] {
+    border-color: #B8C2CC !important;
+}
+
+/* Owner dashboard / owner page borders */
+[class~="border-[#e9ded5]"],
+[class~="border-[#eee5de]"],
+[class~="border-[#e8ddd3]"],
+[class~="border-[#e8ded1]"],
+[class~="border-[#e3d7cc]"],
+[class~="border-[#dfcfc1]"],
+[class~="border-[#dfc9ba]"],
+[class~="border-[#e5d9cf]"],
+[class~="border-[#e5dad0]"],
+[class~="border-[#e6d7cc]"],
+[class~="border-[#f0e8e2]"] {
+    border-color: #B8C2CC !important;
+}
+
+/* Image frames that were using white borders */
+[class~="border-white/70"],
+[class~="border-white/80"] {
+    border-color: #B8C2CC !important;
 }
