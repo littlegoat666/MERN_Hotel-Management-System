@@ -28,14 +28,15 @@ import { startTranslationObserver, translateDocument } from './i18n/translator'
 
 const App = () => {
     const { pathname } = useLocation()
-    const isOwnerPath = pathname.startsWith('/owner')
-    const isDashboard = pathname === '/owner' || pathname === '/owner/'
+
+    const isOwnerPath = pathname === '/owner' || pathname.startsWith('/owner/')
     const isPaymentPath = /\/(payment|payments|checkout)(\/|$|-)/i.test(pathname)
 
     const { showHotelReg, language } = useAppContext()
 
     useEffect(() => {
-        if (isDashboard || isPaymentPath) {
+        // Owner / Admin pages must always remain English
+        if ( isOwnerPath || isPaymentPath ) {
             translateDocument('en')
             document.documentElement.lang = 'en'
             return undefined
@@ -44,7 +45,7 @@ const App = () => {
         document.documentElement.lang = language === 'zh' ? 'zh-CN' : language
 
         return startTranslationObserver(language)
-    }, [ language, pathname, isDashboard, isPaymentPath ])
+    }, [ language, pathname, isOwnerPath, isPaymentPath ])
 
     return (
         <div className = { isOwnerPath ? 'min-h-screen' : '' }>

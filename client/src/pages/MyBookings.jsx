@@ -6,14 +6,35 @@ import toast from 'react-hot-toast'
 
 const MyBookings = () => {
 
-    const { axios, getToken, user, currency } = useAppContext()
+    const { axios, getToken, user, currency, language } = useAppContext()
+
     const [ bookings, setBookings ] = useState([])
     const [ cancellingBookingId, setCancellingBookingId ] = useState(null)
 
+    const dateLocales = {
+        en: 'en-US',
+        th: 'th-TH',
+        zh: 'zh-CN',
+        ja: 'ja-JP',
+    }
+
+    const dateLocale = dateLocales[ language ] || 'en-US'
+
+    const formatBookingDate = (date) => {
+        return new Intl.DateTimeFormat(dateLocale, {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric',
+        }).format(new Date(date))
+    }
+
     const fetchUserBookings = async () => {
         try {
-            const { data } = await axios.get('/api/bookings/user', { headers: { Authorization: `Bearer ${ await getToken()}` } })
-            if (data.success) {
+            const { data } = await axios.get('/api/bookings/user', {
+                headers: { Authorization: `Bearer ${ await getToken() }` }
+            })
+
+            if ( data.success ) {
                 setBookings(data.bookings)
             } else {
                 toast.error(data.message)
@@ -26,14 +47,19 @@ const MyBookings = () => {
     const handlePayment = async (bookingId) => {
         try {
             const token = await getToken()
-            if (!token) {
+
+            if ( !token ) {
                 toast.error('Please sign in again')
                 return
             }
 
-            const { data } = await axios.post('/api/bookings/stripe-payment', { bookingId }, { headers: { Authorization: `Bearer ${ token }` } })
+            const { data } = await axios.post(
+                '/api/bookings/stripe-payment',
+                { bookingId },
+                { headers: { Authorization: `Bearer ${ token }` } }
+            )
 
-            if (data.success && data.url) {
+            if ( data.success && data.url ) {
                 window.location.href = data.url
             } else {
                 toast.error(data.message)
@@ -44,22 +70,23 @@ const MyBookings = () => {
     }
 
     const handleCancelBooking = async (bookingId) => {
-        if (!window.confirm('Are you sure you want to cancel this booking? This action cannot be undone.')) return
+        if ( !window.confirm('Are you sure you want to cancel this booking? This action cannot be undone.') ) return
 
         try {
             setCancellingBookingId(bookingId)
 
             const token = await getToken()
-            if (!token) {
+
+            if ( !token ) {
                 toast.error('Please sign in again')
                 return
             }
 
-            const { data } = await axios.delete(`/api/bookings/${bookingId}`, {
-                headers: { Authorization: `Bearer ${token}` }
+            const { data } = await axios.delete(`/api/bookings/${ bookingId }`, {
+                headers: { Authorization: `Bearer ${ token }` }
             })
 
-            if (data.success) {
+            if ( data.success ) {
                 toast.success('Booking cancelled successfully')
                 await fetchUserBookings()
             } else {
@@ -73,16 +100,23 @@ const MyBookings = () => {
     }
 
     useEffect(() => {
-        if (user) {
+        if ( user ) {
             fetchUserBookings()
         }
     }, [ user ])
 
     return (
         <div className = 'py-28 md:pb-35 md:pt-32 px-4 md:px-16 lg:px-24 xl:px-32 bg-[#FAF7F2] min-h-screen'>
-            <Title title = 'My Bookings' subTitle = '' align = 'left' font = 'font-mali text-[#55443B]' />
+
+            <Title
+                title = 'My Bookings'
+                subTitle = ''
+                align = 'left'
+                font = 'font-mali text-[#55443B]'
+            />
 
             <div className = 'max-w-6xl mt-8 w-full text-[#51443D]'>
+
                 <div className = 'hidden md:grid md:grid-cols-[3fr_2fr_1fr] w-full border-b border-[#D8C9BC] font-mali text-base py-3'>
                     <div className = 'w-1/3'> Rooms </div>
                     <div className = 'w-1/3'> Date & Timings </div>
@@ -90,10 +124,14 @@ const MyBookings = () => {
                 </div>
 
                 { bookings.map((booking) => (
-                    <div key = { booking._id } className = 'grid grid-cols-1 md:grid-cols-[3fr_2fr_1fr] w-full border-b border-[#E5DAD0] py-6 first:border-t'>
+                    <div
+                        key = { booking._id }
+                        className = 'grid grid-cols-1 md:grid-cols-[3fr_2fr_1fr] w-full border-b border-[#E5DAD0] py-6 first:border-t'
+                    >
 
                         {/* ------ Room Details ------ */}
                         <div className = 'flex flex-col md:flex-row items-start md:items-center'>
+
                             <img
                                 src = { booking.room.images[0] }
                                 alt = 'hotel-img'
@@ -101,55 +139,93 @@ const MyBookings = () => {
                             />
 
                             <div className = 'flex flex-col justify-center gap-1.5 max-md:mt-3 md:ml-5'>
-                                <p className = 'font-mali text-2xl text-[#51443D]'>{ booking.room.roomType }</p>
+
+                                <p className = 'font-mali text-2xl text-[#51443D]'>
+                                    { booking.room.roomType }
+                                </p>
 
                                 <div className = 'flex items-center gap-1 text-sm text-[#918077]'>
+
                                     <img src = { assets.guestsIcon } alt = 'guests-icon' />
-                                    <span> Guests: { booking.guests } (Adults: { booking.adults ?? booking.guests }, Children: { booking.children ?? 0 }) </span>
+
+                                    <span>
+                                        Guests: { booking.guests } (
+                                        <span>Adults:</span> { booking.adults ?? booking.guests },
+                                        <span>Children:</span> { booking.children ?? 0 }
+                                        )
+                                    </span>
+
                                 </div>
 
-                                <p className = 'text-base text-[#A65F46]'> Total: { currency } { booking.totalPrice } </p>
+                                <p className = 'text-base text-[#A65F46]'>
+                                    Total: { currency } { booking.totalPrice }
+                                </p>
+
                             </div>
                         </div>
 
                         {/* ------ Date & Timings ------ */}
                         <div className = 'flex flex-row md:items-center md:gap-12 mt-3 gap-8'>
+
                             <div>
-                                <p className = 'text-[#51443D]'> Check In: </p>
+                                <p className = 'text-[#51443D]'>
+                                    Check In:
+                                </p>
+
                                 <p className = 'text-[#918077] text-sm'>
-                                    { new Date(booking.checkInDate).toDateString() }
+                                    { formatBookingDate(booking.checkInDate) }
                                 </p>
                             </div>
 
                             <div>
-                                <p className = 'text-[#51443D]'> Check Out: </p>
+                                <p className = 'text-[#51443D]'>
+                                    Check Out:
+                                </p>
+
                                 <p className = 'text-[#918077] text-sm'>
-                                    { new Date(booking.checkOutDate).toDateString() }
+                                    { formatBookingDate(booking.checkOutDate) }
                                 </p>
                             </div>
+
                         </div>
 
                         {/* ------ Payment ------ */}
                         <div className = 'flex flex-col items-start justify-center pt-3'>
+
                             <div className = {`flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${ booking.isPaid ? 'bg-[#E4F3E8] text-[#27834A]' : 'bg-[#FFF0E5] text-[#D66A32]'}`}>
+
                                 <div className = {`h-2.5 w-2.5 rounded-full ${ booking.isPaid ? 'bg-[#35A85D]' : 'bg-[#F08A45]'}`}></div>
-                                <p>{ booking.isPaid ? 'Paid' : 'Unpaid' }</p>
+
+                                <p>
+                                    { booking.isPaid ? 'Paid' : 'Unpaid' }
+                                </p>
+
                             </div>
 
-                            {!booking.isPaid && (
+                            { !booking.isPaid && (
                                 <>
-                                    <button onClick = {() => handlePayment(booking._id)} className = 'px-5 py-2 mt-4 text-xs font-medium bg-[#C47755] text-white rounded-full hover:bg-[#A85D40] shadow-sm hover:shadow-md transition-all cursor-pointer'>
+                                    <button
+                                        onClick = { () => handlePayment(booking._id) }
+                                        className = 'px-5 py-2 mt-4 text-xs font-medium bg-[#C47755] text-white rounded-full hover:bg-[#A85D40] shadow-sm hover:shadow-md transition-all cursor-pointer'
+                                    >
                                         Pay Now
                                     </button>
 
-                                    <button onClick = {() => handleCancelBooking(booking._id)} disabled = {cancellingBookingId === booking._id} className = 'px-5 py-2 mt-2 text-xs font-medium bg-[#FFF0EF] border border-[#F2C5C1] text-[#D65C55] rounded-full hover:bg-[#FCE0DD] hover:border-[#E9A7A1] transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed'>
+                                    <button
+                                        onClick = { () => handleCancelBooking(booking._id) }
+                                        disabled = { cancellingBookingId === booking._id }
+                                        className = 'px-5 py-2 mt-2 text-xs font-medium bg-[#FFF0EF] border border-[#F2C5C1] text-[#D65C55] rounded-full hover:bg-[#FCE0DD] hover:border-[#E9A7A1] transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed'
+                                    >
                                         { cancellingBookingId === booking._id ? 'Cancelling...' : 'Cancel Booking' }
                                     </button>
                                 </>
                             )}
+
                         </div>
+
                     </div>
                 ))}
+
             </div>
         </div>
     )
