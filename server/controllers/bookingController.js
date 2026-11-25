@@ -145,10 +145,13 @@ export const checkAvailabilityAPI = async (req, res) => {
     try {
         const { room, checkInDate, checkOutDate } = req.body
         const roomData = await Room.findById(room)
+
         if (!roomData || roomData.isDeleted || !roomData.isAvailable) {
             return res.json({ success: true, isAvailable: false })
         }
+
         const isAvailable = await checkAvailability({ checkInDate, checkOutDate, room })
+
         return res.json({ success: true, isAvailable })
     } catch (error) {
         return res.status(400).json({ success: false, message: error.message })
@@ -167,20 +170,26 @@ export const createBooking = async (req, res) => {
 
         const checkIn = new Date(checkInDate)
         const checkOut = new Date(checkOutDate)
+
         if (!checkInDate || !checkOutDate || Number.isNaN(checkIn.getTime()) || Number.isNaN(checkOut.getTime()) || checkOut <= checkIn) {
             return res.status(400).json({ success: false, message: 'Please provide a valid check-in and check-out date' })
         }
 
         const roomData = await Room.findById(room).populate('hotel')
+
         if (!roomData || roomData.isDeleted || !roomData.isAvailable || !roomData.hotel) {
             return res.status(400).json({ success: false, message: 'This room is no longer available for booking' })
         }
 
         const isAvailable = await checkAvailability({ checkInDate, checkOutDate, room })
-        if (!isAvailable) return res.status(409).json({ success: false, message: 'Room is not available for the selected dates' })
+
+        if (!isAvailable) {
+            return res.status(409).json({ success: false, message: 'Room is not available for the selected dates' })
+        }
 
         const nights = Math.ceil((checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24))
         const totalPrice = Number(roomData.pricePerNight) * nights
+
         const booking = await Booking.create({
             user: req.user._id,
             room,
@@ -227,6 +236,7 @@ export const getUserBookings = async (req, res) => {
         const bookings = await Booking.find({ user: req.user._id })
             .populate('room hotel')
             .sort({ createdAt: -1 })
+
         return res.json({ success: true, bookings })
     } catch (error) {
         console.error('Get user bookings error:', error.message)
@@ -237,7 +247,10 @@ export const getUserBookings = async (req, res) => {
 export const getHotelBookings = async (req, res) => {
     try {
         const hotel = await Hotel.findOne({ owner: req.auth.userId })
-        if (!hotel) return res.status(404).json({ success: false, message: 'No hotel is registered to this owner account' })
+
+        if (!hotel) {
+            return res.status(404).json({ success: false, message: 'No hotel is registered to this owner account' })
+        }
 
         const bookings = await Booking.find({ hotel: hotel._id })
             .populate('room hotel user')
@@ -246,25 +259,40 @@ export const getHotelBookings = async (req, res) => {
 
         const paidBookings = bookings.filter((booking) => booking.isPaid === true)
         const totalRevenue = paidBookings.reduce((total, booking) => total + Number(booking.totalPrice || 0), 0)
+
         const now = new Date()
         const nowParts = getBangkokParts(now)
         const currentYear = Number(nowParts.year)
         const selectedYearInput = Number.parseInt(req.query.year, 10)
         const selectedMonthInput = Number.parseInt(req.query.month, 10)
-        const selectedYear = Number.isInteger(selectedYearInput) && selectedYearInput >= 2000 && selectedYearInput <= currentYear + 1 ? selectedYearInput : currentYear
-        const selectedMonth = Number.isInteger(selectedMonthInput) && selectedMonthInput >= 1 && selectedMonthInput <= 12 ? selectedMonthInput : Number(nowParts.month)
+
+        const selectedYear = Number.isInteger(selectedYearInput) && selectedYearInput >= 2000 && selectedYearInput <= currentYear + 1
+            ? selectedYearInput
+            : currentYear
+
+        const selectedMonth = Number.isInteger(selectedMonthInput) && selectedMonthInput >= 1 && selectedMonthInput <= 12
+            ? selectedMonthInput
+            : Number(nowParts.month)
 
         const monthlyRevenue = Array.from({ length: 12 }, (_, index) => ({
-            month: new Date(Date.UTC(selectedYear, index, 1)).toLocaleDateString('en-US', { month: 'short', timeZone: 'UTC' }),
+            month: new Date(Date.UTC(selectedYear, index, 1)).toLocaleDateString('en-US', {
+                month: 'short',
+                timeZone: 'UTC',
+            }),
             revenue: 0,
         }))
 
         const dayCount = new Date(Date.UTC(selectedYear, selectedMonth, 0)).getUTCDate()
-        const dailyRevenue = Array.from({ length: dayCount }, (_, index) => ({ day: index + 1, revenue: 0 }))
+        const dailyRevenue = Array.from({ length: dayCount }, (_, index) => ({
+            day: index + 1,
+            revenue: 0,
+        }))
+
         const yearMap = new Map()
 
         paidBookings.forEach((booking) => {
             if (!booking.createdAt) return
+
             const parts = getBangkokParts(booking.createdAt)
             const year = Number(parts.year)
             const month = Number(parts.month)
@@ -272,13 +300,22 @@ export const getHotelBookings = async (req, res) => {
             const amount = Number(booking.totalPrice || 0)
 
             yearMap.set(year, (yearMap.get(year) || 0) + amount)
+
             if (year === selectedYear) monthlyRevenue[month - 1].revenue += amount
             if (year === selectedYear && month === selectedMonth) dailyRevenue[day - 1].revenue += amount
         })
 
         yearMap.set(currentYear, yearMap.get(currentYear) || 0)
-        const yearlyRevenue = Array.from(yearMap.entries()).sort(([a], [b]) => a - b).map(([year, revenue]) => ({ year, revenue }))
-        const availableYears = [...new Set([currentYear, selectedYear, ...yearlyRevenue.map((item) => item.year)])].sort((a, b) => b - a)
+
+        const yearlyRevenue = Array.from(yearMap.entries())
+            .sort(([a], [b]) => a - b)
+            .map(([year, revenue]) => ({ year, revenue }))
+
+        const availableYears = [...new Set([
+            currentYear,
+            selectedYear,
+            ...yearlyRevenue.map((item) => item.year),
+        ])].sort((a, b) => b - a)
 
         return res.json({
             success: true,
@@ -304,10 +341,19 @@ export const getHotelBookings = async (req, res) => {
 export const cancelBooking = async (req, res) => {
     try {
         const bookingId = req.body?.bookingId || req.params?.bookingId
-        if (!bookingId) return res.status(400).json({ success: false, message: 'Booking ID is required' })
 
-        const booking = await Booking.findOne({ _id: bookingId, user: req.user._id }).populate('room hotel')
-        if (!booking) return res.status(404).json({ success: false, message: 'Booking not found' })
+        if (!bookingId) {
+            return res.status(400).json({ success: false, message: 'Booking ID is required' })
+        }
+
+        const booking = await Booking.findOne({
+            _id: bookingId,
+            user: req.user._id,
+        }).populate('room hotel')
+
+        if (!booking) {
+            return res.status(404).json({ success: false, message: 'Booking not found' })
+        }
 
         const roomData = booking.room
         const hotelData = booking.hotel || roomData?.hotel
@@ -333,6 +379,7 @@ export const cancelBooking = async (req, res) => {
         }
 
         await Booking.deleteOne({ _id: booking._id, user: req.user._id })
+
         return res.json({ success: true, message: 'Booking cancelled successfully' })
     } catch (error) {
         console.error('Cancel booking error:', error.message)
@@ -340,18 +387,42 @@ export const cancelBooking = async (req, res) => {
     }
 }
 
-export const stripePayment = async (req, res) => {
+export const stripePayment = async ( req, res ) => {
     try {
         const { bookingId } = req.body
-        const booking = await Booking.findOne({ _id: bookingId, user: req.user._id })
-        if (!booking) return res.status(404).json({ success: false, message: 'Booking not found for this account' })
-        if (booking.isPaid) return res.status(400).json({ success: false, message: 'This booking has already been paid' })
+
+        const booking = await Booking.findOne({
+            _id: bookingId,
+            user: req.user._id,
+        })
+
+        if ( !booking ) {
+            return res.status(404).json({
+                success: false,
+                message: 'Booking not found for this account',
+            })
+        }
+
+        if ( booking.isPaid ) {
+            return res.status(400).json({
+                success: false,
+                message: 'This booking has already been paid',
+            })
+        }
 
         const roomData = await Room.findById(booking.room).populate('hotel')
-        if (!roomData?.hotel) return res.status(404).json({ success: false, message: 'The room details for this booking are no longer available' })
+
+        if ( !roomData?.hotel ) {
+            return res.status(404).json({
+                success: false,
+                message: 'The room details for this booking are no longer available',
+            })
+        }
 
         const roomImages = Array.isArray(roomData.images)
-            ? roomData.images.filter((image) => typeof image === 'string' && /^https?:\/\//i.test(image)).slice(0, 8)
+            ? roomData.images
+                .filter(( image ) => typeof image === 'string' && /^https?:\/\//i.test(image))
+                .slice(0, 8)
             : []
 
         const { origin } = req.headers
@@ -361,8 +432,8 @@ export const stripePayment = async (req, res) => {
             price_data: {
                 currency: 'thb',
                 product_data: {
-                    name: `${roomData.hotel.name} - ${roomData.roomType}`,
-                    ...(roomImages.length > 0 ? { images: roomImages } : {}),
+                    name: `${ roomData.hotel.name } - ${ roomData.roomType }`,
+                    ...( roomImages.length > 0 ? { images: roomImages } : {} ),
                 },
                 unit_amount: Math.round(Number(booking.totalPrice) * 100),
             },
@@ -372,22 +443,37 @@ export const stripePayment = async (req, res) => {
         const session = await stripeInstance.checkout.sessions.create({
             line_items,
             mode: 'payment',
-            locale: 'auto',
+
+            // Force Stripe Checkout to English
+            locale: 'en',
+
             branding_settings: {
                 display_name: roomData.hotel.name || 'Bupatara Chiangmai',
                 background_color: '#FAF7F2',
                 button_color: '#A96F58',
                 border_style: 'rounded',
-                font_family: 'pridi',
+
+                // Rounded font similar to Mali
+                font_family: 'zen_maru_gothic',
             },
-            success_url: `${origin}/loader/my-bookings`,
-            cancel_url: `${origin}/my-bookings`,
-            metadata: { bookingId: String(booking._id) },
+
+            success_url: `${ origin }/loader/my-bookings`,
+            cancel_url: `${ origin }/my-bookings`,
+            metadata: {
+                bookingId: String(booking._id),
+            },
         })
 
-        return res.json({ success: true, url: session.url })
-    } catch (error) {
+        return res.json({
+            success: true,
+            url: session.url,
+        })
+    } catch ( error ) {
         console.error('Stripe payment error:', error.message)
-        return res.status(500).json({ success: false, message: 'Payment could not be started' })
+
+        return res.status(500).json({
+            success: false,
+            message: 'Payment could not be started',
+        })
     }
 }

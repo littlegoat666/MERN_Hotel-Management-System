@@ -106,8 +106,7 @@ const userButtonAppearance = {
         },
 
         userButtonPopoverFooter: {
-            borderTop: '1px solid #F0E5DC',
-            marginTop: '6px',
+            display: 'none',
         },
     },
 }

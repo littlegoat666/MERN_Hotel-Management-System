@@ -1,0 +1,529 @@
+/* =========================================
+   BUPATARA OWNER THEME - PURPLE EDITION
+   ========================================= */
+
+.owner-theme {
+    --owner-page: #F8F5FA;
+    --owner-card: #FFFDFF;
+    --owner-surface: #F4EFF8;
+    --owner-surface-soft: #F0EAF5;
+    --owner-border: #DDD4E7;
+
+    --owner-text: #352B43;
+    --owner-muted: #756A80;
+
+    --owner-primary: #79649F;
+    --owner-primary-dark: #66517F;
+    --owner-primary-light: #B19BCF;
+
+    --owner-hover: #E7DDF1;
+
+    min-height: 100vh;
+    background-color: var(--owner-page) !important;
+    color: var(--owner-text);
+    font-family: 'Mali', cursive;
+}
+
+/* =========================================
+   PAGE BACKGROUND
+   ========================================= */
+
+.owner-theme,
+.owner-theme main {
+    background-color: var(--owner-page);
+    color: var(--owner-text);
+}
+
+.owner-theme aside {
+    background-color: #F8F5FA !important;
+    border-color: var(--owner-border) !important;
+}
+
+.owner-theme aside section {
+    background-color: var(--owner-card) !important;
+    border-color: var(--owner-border) !important;
+}
+
+/* =========================================
+   NAVBAR
+   ========================================= */
+
+.owner-theme header {
+    background-color: rgba(255, 253, 255, 0.97) !important;
+    border-color: var(--owner-border) !important;
+}
+
+.owner-theme header .rounded-full {
+    border-color: var(--owner-border) !important;
+}
+
+/* =========================================
+   ALL OWNER PAGE HEADERS
+   ========================================= */
+
+.owner-theme section[class*="bg-gradient-to-br"] {
+    background-color: #927AB5 !important;
+    background-image: linear-gradient(
+        115deg,
+        #79649F 0%,
+        #927AB5 55%,
+        #B19BCF 100%
+    ) !important;
+
+    color: #FFFFFF !important;
+    border-color: transparent !important;
+    box-shadow: 0 12px 24px rgba(121, 100, 159, 0.16) !important;
+}
+
+.owner-theme section[class*="bg-gradient-to-br"] h1,
+.owner-theme section[class*="bg-gradient-to-br"] h2 {
+    color: #FFFFFF !important;
+}
+
+.owner-theme section[class*="bg-gradient-to-br"] p {
+    color: #F4EFFA !important;
+}
+
+/* Decorative circles */
+.owner-theme section[class*="bg-gradient-to-br"] [class*="border-white"] {
+    border-color: rgba(255, 255, 255, 0.22) !important;
+}
+
+.owner-theme section[class*="bg-gradient-to-br"] [class*="bg-[#d9a58e]"] {
+    background-color: rgba(226, 215, 237, 0.2) !important;
+}
+
+/* =========================================
+   CARD BACKGROUNDS
+   ========================================= */
+
+.owner-theme [class*="bg-[#fffdfa]"],
+.owner-theme [class*="bg-[#fffaf5]"] {
+    background-color: var(--owner-card) !important;
+}
+
+/* Warm neutral surfaces -> soft lavender */
+
+.owner-theme [class*="bg-[#fcfaf7]"],
+.owner-theme [class*="bg-[#faf7f3]"],
+.owner-theme [class*="bg-[#faf5f0]"],
+.owner-theme [class*="bg-[#faf6f1]"],
+.owner-theme [class*="bg-[#f8f3ee]"],
+.owner-theme [class*="bg-[#f5eee8]"],
+.owner-theme [class*="bg-[#fbf7f2]"],
+.owner-theme [class*="bg-[#fbf0e8]"],
+.owner-theme [class*="bg-[#fcf6f2]"] {
+    background-color: #F4EFF8 !important;
+}
+
+/* Selected / highlighted panels */
+
+.owner-theme [class*="bg-[#f1e4db]"],
+.owner-theme [class*="bg-[#f2e5dc]"],
+.owner-theme [class*="bg-[#f7ece5]"],
+.owner-theme [class*="bg-[#f8f2ec]"],
+.owner-theme [class*="bg-[#f4ede7]"] {
+    background-color: #EEE6F5 !important;
+}
+
+/* Keep category icon backgrounds colorful */
+.owner-theme [class*="bg-[#fff0df]"],
+.owner-theme [class*="bg-[#fff0e5]"],
+.owner-theme [class*="bg-[#fff2d9]"],
+.owner-theme [class*="bg-[#e3f4e7]"],
+.owner-theme [class*="bg-[#e5f1e7]"],
+.owner-theme [class*="bg-[#e4f3f1]"],
+.owner-theme [class*="bg-[#f9e8ed]"],
+.owner-theme [class*="bg-[#fbe8e4]"],
+.owner-theme [class*="bg-[#e9e4ff]"],
+.owner-theme [class*="bg-[#eee7ff]"],
+.owner-theme [class*="bg-[#e5f2ff]"],
+.owner-theme [class*="bg-[#ffe9dc]"] {
+    /* Keep original semantic pastel backgrounds */
+    background-image: none;
+}
+
+/* =========================================
+   PRIMARY BUTTONS
+   ========================================= */
+
+.owner-theme button[class*="bg-[#a96f58]"],
+.owner-theme button[class*="bg-[#9b6b55]"],
+.owner-theme button[class*="bg-[#b87962]"],
+.owner-theme button[class*="bg-[#a66f58]"],
+.owner-theme button[class*="bg-[#805541]"] {
+    background-color: var(--owner-primary) !important;
+    border-color: var(--owner-primary) !important;
+    color: #FFFFFF !important;
+}
+
+.owner-theme button[class*="bg-[#8f5946]"] {
+    background-color: var(--owner-primary-dark) !important;
+    color: #FFFFFF !important;
+}
+
+/* =========================================
+   INPUTS / SELECTS / TEXTAREAS
+   ========================================= */
+
+.owner-theme input:not([type="checkbox"]):not([type="radio"]),
+.owner-theme select,
+.owner-theme textarea {
+    border-color: var(--owner-border) !important;
+    background-color: #FFFDFF;
+    color: var(--owner-text) !important;
+}
+
+.owner-theme input::placeholder,
+.owner-theme textarea::placeholder {
+    color: #9B90A7 !important;
+    opacity: 1;
+}
+
+.owner-theme input:focus,
+.owner-theme select:focus,
+.owner-theme textarea:focus {
+    border-color: #A891C5 !important;
+    background-color: #FFFFFF !important;
+    box-shadow: 0 0 0 4px rgba(146, 122, 181, 0.15) !important;
+    outline: none !important;
+}
+
+.owner-theme input[type="checkbox"],
+.owner-theme input[type="radio"] {
+    accent-color: var(--owner-primary) !important;
+}
+
+/* =========================================
+   BORDER COLORS
+   ========================================= */
+
+.owner-theme [class*="border-[#e9ded5]"],
+.owner-theme [class*="border-[#eee5de]"],
+.owner-theme [class*="border-[#e8ddd3]"],
+.owner-theme [class*="border-[#e3d7cc]"],
+.owner-theme [class*="border-[#dfcfc1]"],
+.owner-theme [class*="border-[#dfc9ba]"],
+.owner-theme [class*="border-[#e6d7cc]"],
+.owner-theme [class*="border-[#e8dfc8]"],
+.owner-theme [class*="border-[#f0e8e2]"],
+.owner-theme [class*="border-[#eadbd0]"],
+.owner-theme [class*="border-[#e8ded1]"] {
+    border-color: var(--owner-border) !important;
+}
+
+/* =========================================
+   TEXT COLORS
+   ========================================= */
+
+/* Main text */
+.owner-theme :not(svg)[class*="text-[#302925]"],
+.owner-theme :not(svg)[class*="text-[#493a34]"],
+.owner-theme :not(svg)[class*="text-[#493832]"],
+.owner-theme :not(svg)[class*="text-[#534239]"],
+.owner-theme :not(svg)[class*="text-[#55463e]"],
+.owner-theme :not(svg)[class*="text-[#57463d]"],
+.owner-theme :not(svg)[class*="text-[#59483f]"],
+.owner-theme :not(svg)[class*="text-[#63534a]"],
+.owner-theme :not(svg)[class*="text-[#65544a]"],
+.owner-theme :not(svg)[class*="text-[#6e5b50]"],
+.owner-theme :not(svg)[class*="text-[#6b5549]"],
+.owner-theme :not(svg)[class*="text-[#6c5145]"],
+.owner-theme :not(svg)[class*="text-[#80685a]"],
+.owner-theme :not(svg)[class*="text-[#866f61]"],
+.owner-theme :not(svg)[class*="text-[#806d61]"] {
+    color: #352B43 !important;
+}
+
+/* Secondary text */
+.owner-theme :not(svg)[class*="text-[#8d7b70]"],
+.owner-theme :not(svg)[class*="text-[#806f64]"],
+.owner-theme :not(svg)[class*="text-[#927f73]"],
+.owner-theme :not(svg)[class*="text-[#a09287]"],
+.owner-theme :not(svg)[class*="text-[#aa9a90]"],
+.owner-theme :not(svg)[class*="text-[#a99a90]"],
+.owner-theme :not(svg)[class*="text-[#9a897e]"],
+.owner-theme :not(svg)[class*="text-[#9b8b80]"],
+.owner-theme :not(svg)[class*="text-[#ad9b90]"],
+.owner-theme :not(svg)[class*="text-[#b3a49b]"],
+.owner-theme :not(svg)[class*="text-[#b1a298]"],
+.owner-theme :not(svg)[class*="text-[#92705e]"],
+.owner-theme :not(svg)[class*="text-[#a17a64]"] {
+    color: #756A80 !important;
+}
+
+/* Coffee accents -> rich purple */
+
+.owner-theme :not(svg)[class*="text-[#a66f58]"],
+.owner-theme :not(svg)[class*="text-[#a96f58]"],
+.owner-theme :not(svg)[class*="text-[#b87962]"],
+.owner-theme :not(svg)[class*="text-[#a77a63]"],
+.owner-theme :not(svg)[class*="text-[#9b6b55]"],
+.owner-theme :not(svg)[class*="text-[#8f5946]"],
+.owner-theme :not(svg)[class*="text-[#985d48]"],
+.owner-theme :not(svg)[class*="text-[#965f49]"],
+.owner-theme :not(svg)[class*="text-[#76564b]"] {
+    color: #79649F !important;
+}
+
+/* =========================================
+   ICONS - PRESERVE VIVID CATEGORY COLORS
+   ========================================= */
+
+/* Do not apply a global SVG color.
+   Keep orange, green, blue, pink and red icons untouched. */
+
+/* Only replace the previous coffee-brown icons with a vibrant purple */
+
+.owner-theme svg[class*="text-[#a66f58]"],
+.owner-theme svg[class*="text-[#a96f58]"],
+.owner-theme svg[class*="text-[#b87962]"],
+.owner-theme svg[class*="text-[#a77a63]"] {
+    color: #8C62B6 !important;
+}
+
+/* Icon containers with their own SVG */
+.owner-theme span:has(> svg)[class*="text-[#a66f58]"],
+.owner-theme span:has(> svg)[class*="text-[#a96f58]"],
+.owner-theme span:has(> svg)[class*="text-[#b87962]"] {
+    color: #8C62B6 !important;
+}
+
+/* =========================================
+   SIDEBAR
+   ========================================= */
+
+.owner-theme aside nav a {
+    transition: background-color 160ms ease, color 160ms ease, box-shadow 160ms ease;
+}
+
+.owner-theme aside nav a[aria-current="page"] {
+    background-color: #E7DDF1 !important;
+    color: #4B3D5C !important;
+    border: 1px solid #D8CBE7;
+    box-shadow: 0 3px 9px rgba(88, 65, 111, 0.08) !important;
+}
+
+.owner-theme aside nav a[aria-current="page"] > span {
+    /* Do not overwrite the icon's individual color */
+    background-color: #F1EAF7 !important;
+}
+
+.owner-theme aside section > div {
+    border-color: var(--owner-border) !important;
+}
+
+/* =========================================
+   DASHBOARD CHARTS
+   ========================================= */
+
+.owner-theme #bupataraRevenueGradient stop:first-child {
+    stop-color: #927AB5 !important;
+}
+
+.owner-theme #bupataraRevenueGradient stop:nth-child(2) {
+    stop-color: #B19BCF !important;
+}
+
+.owner-theme #bupataraRevenueGradient stop:last-child {
+    stop-color: #E2D7ED !important;
+}
+
+.owner-theme #bupataraRevenueBarGradient stop:first-child {
+    stop-color: #A891C5 !important;
+}
+
+.owner-theme #bupataraRevenueBarGradient stop:last-child {
+    stop-color: #79649F !important;
+}
+
+.owner-theme .recharts-area-curve {
+    stroke: #79649F !important;
+}
+
+.owner-theme .recharts-cartesian-grid line {
+    stroke: #E5DCEC !important;
+}
+
+.owner-theme .recharts-cartesian-axis-tick-value {
+    fill: #756A80 !important;
+}
+
+.owner-theme .recharts-tooltip-cursor {
+    fill: #E7DDF1 !important;
+    stroke: #C7B5D8 !important;
+}
+
+/* Dashboard revenue tooltip */
+.owner-theme [class*="min-w-[175px]"] {
+    background: linear-gradient(135deg, #514365, #79649F, #927AB5) !important;
+    border-color: #79649F !important;
+}
+
+/* =========================================
+   HOVER - INTERACTIVE ELEMENTS
+   ========================================= */
+
+.owner-theme a:hover,
+.owner-theme button:hover:not(:disabled),
+.owner-theme [role="button"]:hover,
+.owner-theme label[class*="cursor-pointer"]:hover,
+.owner-theme select:hover,
+.owner-theme tr:hover {
+    background-color: #E7DDF1 !important;
+    border-color: #CBBBDD !important;
+    color: #4B3D5C !important;
+}
+
+/* Do not recolor explicitly colored SVG children */
+.owner-theme a:hover svg,
+.owner-theme button:hover svg,
+.owner-theme label:hover svg {
+    filter: none;
+}
+
+/* Hover on cards: border + shadow, not a flat color overlay */
+.owner-theme article:hover {
+    border-color: #C8B7D8 !important;
+    box-shadow: 0 8px 22px rgba(88, 65, 111, 0.09) !important;
+}
+
+/* Hover on clickable image upload areas */
+.owner-theme [class*="cursor-pointer"]:hover {
+    border-color: #B19BCF !important;
+}
+
+/* Focus state */
+.owner-theme :is(button, a, input, select, textarea):focus-visible {
+    outline: 2px solid #927AB5 !important;
+    outline-offset: 2px;
+}
+
+/* Disabled buttons */
+.owner-theme button:disabled {
+    cursor: not-allowed;
+}
+
+/* =========================================
+   ICON CONTAINER - DEEPER PASTEL COLORS
+   Keep original icon colors
+   ========================================= */
+
+/* Orange */
+.owner-theme :is(span, div):has(> svg)[class*="bg-[#fff0df]"],
+.owner-theme :is(span, div):has(> svg)[class*="bg-[#fff0e5]"],
+.owner-theme :is(span, div):has(> svg)[class*="bg-[#fff2d9]"] {
+    background-color: #F4D3B4 !important;
+}
+
+/* Green */
+.owner-theme :is(span, div):has(> svg)[class*="bg-[#e3f4e7]"],
+.owner-theme :is(span, div):has(> svg)[class*="bg-[#e5f1e7]"] {
+    background-color: #C7E5D0 !important;
+}
+
+/* Blue */
+.owner-theme :is(span, div):has(> svg)[class*="bg-[#e5f2ff]"] {
+    background-color: #C9DEF2 !important;
+}
+
+/* Pink */
+.owner-theme :is(span, div):has(> svg)[class*="bg-[#f9e8ed]"],
+.owner-theme :is(span, div):has(> svg)[class*="bg-[#fbe8e4]"] {
+    background-color: #EFC6D5 !important;
+}
+
+/* Purple */
+.owner-theme :is(span, div):has(> svg)[class*="bg-[#f4eafa]"],
+.owner-theme :is(span, div):has(> svg)[class*="bg-[#eee7ff]"],
+.owner-theme :is(span, div):has(> svg)[class*="bg-[#e9e4ff]"] {
+    background-color: #DCC9EE !important;
+}
+
+/* Teal */
+.owner-theme :is(span, div):has(> svg)[class*="bg-[#e4f3f1]"] {
+    background-color: #BFE2DF !important;
+}
+
+/* Orange / Peach */
+.owner-theme :is(span, div):has(> svg)[class*="bg-[#ffe9dc]"] {
+    background-color: #F2CBB8 !important;
+}
+
+/* Preserve icon colors even on active sidebar items */
+.owner-theme aside nav a[aria-current="page"] > span:has(> svg) {
+    background-color: inherit;
+}
+
+/* =========================================
+   OWNER CALENDAR - PURPLE THEME
+   ========================================= */
+
+.owner-theme [role="dialog"][data-no-translate="true"] {
+    background-color: #FFFFFF !important;
+    border-color: #DDD4E7 !important;
+    color: #4B3D5C !important;
+}
+
+/* Month title, weekdays and calendar text */
+.owner-theme [role="dialog"][data-no-translate="true"] p,
+.owner-theme [role="dialog"][data-no-translate="true"] div {
+    color: #4B3D5C;
+}
+
+/* Previous / Next month buttons */
+.owner-theme [role="dialog"][data-no-translate="true"] button[aria-label="Previous month"],
+.owner-theme [role="dialog"][data-no-translate="true"] button[aria-label="Next month"] {
+    color: #79649F !important;
+    background-color: transparent !important;
+}
+
+/* Normal calendar dates */
+.owner-theme [role="dialog"][data-no-translate="true"] button:not([aria-label="Previous month"]):not([aria-label="Next month"]) {
+    color: #4B3D5C;
+}
+
+/* Selected date */
+.owner-theme [role="dialog"][data-no-translate="true"] button[aria-pressed="true"] {
+    background-color: #79649F !important;
+    border-color: #79649F !important;
+    color: #FFFFFF !important;
+}
+
+/* Today's date */
+.owner-theme [role="dialog"][data-no-translate="true"] button[class*="border-[#A96F58]"] {
+    background-color: #F0EAF5 !important;
+    border-color: #927AB5 !important;
+    color: #66517F !important;
+}
+
+/* Today button */
+.owner-theme [role="dialog"][data-no-translate="true"] button[class*="text-[#A96F58]"] {
+    color: #79649F !important;
+}
+
+/* Calendar separator */
+.owner-theme [role="dialog"][data-no-translate="true"] .border-t {
+    border-color: #DDD4E7 !important;
+}
+
+/* All calendar hover */
+.owner-theme [role="dialog"][data-no-translate="true"] button:hover:not(:disabled) {
+    background-color: #E7DDF1 !important;
+    border-color: #CBBBDD !important;
+    color: #4B3D5C !important;
+    box-shadow: none !important;
+}
+
+/* Selected date hover */
+.owner-theme [role="dialog"][data-no-translate="true"] button[aria-pressed="true"]:hover {
+    background-color: #66517F !important;
+    border-color: #66517F !important;
+    color: #FFFFFF !important;
+}
+
+/* Disabled dates */
+.owner-theme [role="dialog"][data-no-translate="true"] button:disabled {
+    opacity: 0.25;
+    cursor: not-allowed;
+}

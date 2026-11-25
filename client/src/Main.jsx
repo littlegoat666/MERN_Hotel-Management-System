@@ -12,7 +12,7 @@ if (!PUBLISHABLE_KEY) {
     throw new Error('Missing Clerk Publishable Key')
 }
 
-// Custom Clerk Text
+    // Custom Clerk Text
 const clerkLocalization = {
     signIn: {
         start: {
@@ -30,8 +30,13 @@ const clerkLocalization = {
     },
 }
 
-// Bupatara Soft Glass Theme
+    // Bupatara Soft Glass Theme
 const clerkAppearance = {
+        // Hide Development Mode warning
+    layout: {
+        unsafe_disableDevelopmentModeWarnings: true,
+    },
+
     variables: {
         colorPrimary: '#9b6b55',
         colorPrimaryForeground: '#ffffff',
@@ -55,7 +60,7 @@ const clerkAppearance = {
     },
 
     elements: {
-        // Modal background
+            // Modal background
         modalBackdrop: {
             backgroundColor: 'rgba(48, 37, 31, 0.42)',
             backdropFilter: 'blur(12px)',
@@ -67,7 +72,7 @@ const clerkAppearance = {
             boxShadow: 'none',
         },
 
-        // Main glass card
+            // Main glass card
         card: {
             backgroundColor: 'rgba(255, 253, 250, 0.84)',
             backdropFilter: 'blur(24px)',
@@ -90,7 +95,7 @@ const clerkAppearance = {
             fontFamily: 'Mali, cursive',
         },
 
-        // Form fields
+            // Form fields
         formFieldLabel: {
             color: '#6e5a50',
             fontWeight: 500,
@@ -104,7 +109,7 @@ const clerkAppearance = {
             boxShadow: 'inset 0 1px 2px rgba(73, 56, 50, 0.04)',
         },
 
-        // Primary button
+            // Primary button
         formButtonPrimary: {
             background: 'linear-gradient(135deg, #a97861 0%, #805542 100%)',
             color: '#fffaf5',
@@ -117,7 +122,7 @@ const clerkAppearance = {
             },
         },
 
-        // Social login buttons
+            // Social login buttons
         socialButtonsBlockButton: {
             backgroundColor: 'rgba(255, 255, 255, 0.68)',
             border: '1px solid rgba(139, 107, 91, 0.18)',
@@ -145,7 +150,7 @@ const clerkAppearance = {
             color: '#9b8a7f',
         },
 
-        // Footer - White text on dark glass
+            // Footer - Keep Sign up link visible
         footer: {
             background: 'linear-gradient(135deg, rgba(111, 79, 64, 0.96), rgba(73, 56, 50, 0.96))',
             borderTop: '1px solid rgba(255, 255, 255, 0.12)',
@@ -181,17 +186,16 @@ const clerkAppearance = {
             color: '#ffffff',
         },
 
-        // Clerk branding
+            // Hide Secured by Clerk branding
         clerkBranding: {
-            filter: 'brightness(0) invert(1)',
-            opacity: 0.95,
+            display: 'none',
         },
 
         clerkBrandingLink: {
-            color: '#ffffff',
+            display: 'none',
         },
 
-        // Error messages
+            // Error messages
         formFieldErrorText: {
             color: '#bd4c46',
         },
