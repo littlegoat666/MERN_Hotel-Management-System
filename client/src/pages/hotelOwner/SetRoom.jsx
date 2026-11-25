@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { BedDouble, ToggleLeft, ToggleRight, Wifi, RefreshCw } from 'lucide-react'
+import { BedDouble, ToggleLeft, ToggleRight, RefreshCw } from 'lucide-react'
 import { useAppContext } from '../../context/AppContext'
 import toast from 'react-hot-toast'
 
@@ -47,8 +47,7 @@ const SetRoom = () => {
                 <div className = 'pointer-events-none absolute -bottom-24 right-1/4 h-64 w-64 rounded-full bg-[#d9a58e]/10 blur-3xl' />
                 <div className = 'relative z-10 flex flex-wrap items-end justify-between gap-5'>
                     <div>
-                        <h1 className = 'text-3xl font-semibold tracking-tight md:text-4xl'>Set Room</h1>
-                        <p className = 'mt-3 max-w-xl text-sm leading-7 text-[#f1e2d8]/80'>Control which room listings are visible and available for guests.</p>
+                        <h1 className = 'text-4xl font-semibold tracking-tight md:text-5xl'>Set Room</h1>
                     </div>
                 </div>
             </section>
@@ -71,7 +70,6 @@ const SetRoom = () => {
                                         </div>
                                         <span className = {`rounded-full px-2.5 py-1 text-[10px] font-bold ${room.isAvailable ? 'bg-[#e5f1e7] text-[#4d8059]' : 'bg-[#f7e8e3] text-[#a45f50]'}`}>{room.isAvailable ? 'AVAILABLE' : 'UNAVAILABLE'}</span>
                                     </div>
-                                    <p className = 'mt-3 flex items-center gap-1.5 truncate text-xs text-[#9b8b80]'><Wifi size = {13} />{(room.amenities || []).join(' · ') || 'No amenities listed'}</p>
                                     <button type = 'button' disabled = {updatingId === room._id} onClick = {() => toggleAvailability(room._id)} className = {`mt-4 flex w-full items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-xs font-semibold transition disabled:opacity-50 ${room.isAvailable ? 'bg-[#f8e9e4] text-[#a45f50] hover:bg-[#f3ddd5]' : 'bg-[#e5f1e7] text-[#4d8059] hover:bg-[#d8eadc]'}`}>
                                         {room.isAvailable ? <ToggleLeft size = {17} /> : <ToggleRight size = {17} />}
                                         {updatingId === room._id ? 'Updating...' : room.isAvailable ? 'Set as Unavailable' : 'Set as Available'}

@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import {
     Wifi, Coffee, Bell, Mountain, Waves, TreePine,
-    Camera, Sofa, Car, Cigarette, Accessibility
+    Camera, Sofa, Car, Cigarette, Accessibility,
+    AirVent, Tv, Bath, Wind
 } from 'lucide-react'
 import { assets, roomCommonData } from '../assets/assets'
 import StarRating from '../components/StarRating'
@@ -24,6 +25,10 @@ const amenityIcons = {
     'Parking': { icon: Car, color: 'bg-blue-50 text-blue-700' },
     'Smoking Area': { icon: Cigarette, color: 'bg-stone-100 text-stone-700' },
     'Accessible to Disabled': { icon: Accessibility, color: 'bg-rose-50 text-rose-700' },
+    'Air Conditioning': { icon: AirVent, color: 'bg-teal-50 text-teal-700' },
+    'TV': { icon: Tv, color: 'bg-purple-50 text-purple-700' },
+    'Private Bathroom': { icon: Bath, color: 'bg-blue-50 text-blue-700' },
+    'Hair Dryer': { icon: Wind, color: 'bg-pink-50 text-pink-700' },
 }
 
 const RoomDetails = () => {

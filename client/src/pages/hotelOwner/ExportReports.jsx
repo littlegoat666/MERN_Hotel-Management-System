@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import {
     FileSpreadsheet, Download, CalendarDays, Users, UserRoundX,
     Wallet, ClipboardList, Filter, Search, RotateCcw, CalendarRange,
-    TrendingUp, Clock3, BedDouble, ChevronLeft, ChevronRight,
+    TrendingUp, BedDouble, ChevronLeft, ChevronRight,
 } from 'lucide-react'
 import { useAppContext } from '../../context/AppContext'
 import LocalizedDatePicker from '../../components/LocalizedDatePicker'
@@ -343,13 +343,9 @@ const ExportReports = () => {
 
                 <div className = 'relative z-10 flex flex-col justify-between gap-6 md:flex-row md:items-center'>
                     <div className = 'max-w-2xl'>
-                        <h1 className = 'text-3xl font-semibold tracking-tight md:text-4xl'>
+                        <h1 className = 'text-4xl font-semibold tracking-tight md:text-5xl'>
                             Export & Reports
                         </h1>
-
-                        <p className = 'mt-3 max-w-xl text-sm leading-7 text-[#f1e2d8]/80 md:text-base'>
-                            Bookings, guest stays, and paid revenue at a glance.
-                        </p>
                     </div>
 
                     <div className = 'flex shrink-0 flex-col gap-2 md:items-end'>
@@ -374,13 +370,9 @@ const ExportReports = () => {
             <section>
                 <div className = 'mb-4 flex flex-wrap items-end justify-between gap-2'>
                     <div>
-                        <h2 className = 'text-lg font-semibold text-[#493a34]'>
+                        <h2 className = 'text-xl font-semibold text-[#493a34]'>
                             Hotel Overview
                         </h2>
-
-                        <p className = 'mt-1 text-xs text-[#a09287]'>
-                            Summary uses the same booking records shown below after applying Report Filters.
-                        </p>
                     </div>
 
                     {loading && (
@@ -399,7 +391,7 @@ const ExportReports = () => {
                                 key = { item.label }
                                 className = 'relative overflow-hidden rounded-2xl border border-[#e9ded5] bg-[#fffdfa] p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md'
                             >
-                                <div className = 'flex items-start justify-between gap-3'>
+                                <div className = 'flex items-center justify-between gap-3'>
                                     <div className = 'min-w-0'>
                                         <p className = 'text-sm font-semibold text-[#806f64]'>
                                             { item.label }
@@ -427,23 +419,14 @@ const ExportReports = () => {
             {/* REPORT FILTERS */}
             <section className = 'relative z-30 overflow-visible rounded-2xl border border-[#e9ded5] bg-[#fffdfa] shadow-sm'>
 
-                <div className = 'flex flex-wrap items-center justify-between gap-3 border-b border-[#eee5de] px-5 py-4 md:px-6'>
-                    <div>
-                        <div className = 'flex items-center gap-2'>
-                            <Filter size = { 18 } className = 'text-[#a66f58]' />
-                            <h2 className = 'font-semibold text-[#493a34]'>
-                                Report Filters
-                            </h2>
-                        </div>
-
-                        <p className = 'mt-1 text-xs text-[#a09287]'>
-                            Filter records before previewing or downloading the report.
-                        </p>
-                    </div>
-
-                    <span className = 'rounded-full bg-[#f5eee8] px-3 py-1 text-xs font-semibold text-[#92705e]'>
-                        Advanced Search
+                <div className = 'flex items-center gap-3 border-b border-[#eee5de] px-5 py-4 md:px-6'>
+                    <span className = 'flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#c5e2e6] text-[#36737b]'>
+                        <Filter size = { 19 } />
                     </span>
+
+                    <h2 className = 'text-lg font-semibold text-[#493a34]'>
+                        Report Filters
+                    </h2>
                 </div>
 
                 <form onSubmit = { applyFilters } className = 'space-y-5 p-5 md:p-6'>
@@ -585,17 +568,14 @@ const ExportReports = () => {
             <section className = 'overflow-hidden rounded-2xl border border-[#e9ded5] bg-[#fffdfa] shadow-sm'>
 
                 <div className = 'flex flex-wrap items-center justify-between gap-3 border-b border-[#eee5de] px-5 py-4 md:px-6'>
-                    <div>
-                        <div className = 'flex items-center gap-2'>
-                            <FileSpreadsheet size = { 18 } className = 'text-[#a66f58]' />
-                            <h2 className = 'font-semibold text-[#493a34]'>
-                                Booking Details
-                            </h2>
-                        </div>
+                    <div className = 'flex items-center gap-3'>
+                        <span className = 'flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#fff0df] text-[#d97732]'>
+                            <FileSpreadsheet size = { 19 } />
+                        </span>
 
-                        <p className = 'mt-1 text-xs text-[#a09287]'>
-                            Full booking records for detailed checking and Excel export.
-                        </p>
+                        <h2 className = 'text-lg font-semibold text-[#493a34]'>
+                            Booking Details
+                        </h2>
                     </div>
 
                     <span className = 'rounded-full bg-[#f5eee8] px-3 py-1.5 text-xs font-semibold text-[#92705e]'>
@@ -754,29 +734,6 @@ const ExportReports = () => {
                         Currency: { currency }
                     </span>
                 </div>
-            </section>
-
-            {/* REVENUE INFORMATION */}
-            <section className = 'flex flex-col gap-3 rounded-2xl border border-[#e9ded5] bg-[#f8f3ee] p-5 md:flex-row md:items-center md:justify-between md:px-6'>
-                <div className = 'flex items-start gap-3'>
-                    <div className = 'mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white text-[#a66f58]'>
-                        <Clock3 size = { 18 } />
-                    </div>
-
-                    <div>
-                        <p className = 'text-sm font-semibold text-[#6b5549]'>
-                            Revenue calculation
-                        </p>
-
-                        <p className = 'mt-1 text-xs leading-6 text-[#927f73]'>
-                            Payment status is based on the isPaid flag. Revenue is grouped by Booking Date (createdAt) in Bangkok time, not by Check-in Date or payment timestamp. Date Type only controls which booking records are included.
-                        </p>
-                    </div>
-                </div>
-
-                <span className = 'shrink-0 text-xs font-semibold text-[#a17a64]'>
-                    { currentPeriod.year }
-                </span>
             </section>
 
         </div>

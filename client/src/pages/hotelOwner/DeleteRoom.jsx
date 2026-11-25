@@ -74,8 +74,7 @@ const DeleteRoom = () => {
                 <div className = 'pointer-events-none absolute -bottom-24 right-1/4 h-64 w-64 rounded-full bg-[#d9a58e]/10 blur-3xl' />
                 <div className = 'relative z-10 flex flex-wrap items-end justify-between gap-5'>
                     <div>
-                        <h1 className = 'text-3xl font-semibold tracking-tight md:text-4xl'>Delete Room</h1>
-                        <p className = 'mt-3 max-w-xl text-sm leading-7 text-[#f1e2d8]/80'>Review booking records and room history before permanently removing a listing.</p>
+                        <h1 className = 'text-4xl font-semibold tracking-tight md:text-5xl'>Delete Room</h1>
                     </div>
                 </div>
             </section>

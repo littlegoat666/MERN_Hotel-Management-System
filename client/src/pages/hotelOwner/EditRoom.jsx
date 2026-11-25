@@ -6,7 +6,8 @@ import toast from 'react-hot-toast'
 const defaultAmenities = [
     'Free Wi-Fi', 'Room Service', 'Mountain View', 'Pool Access', 'Garden',
     'Security Cameras', 'Furniture Included', 'Parking', 'Smoking Area',
-    'Accessible to Disabled', 'Free Breakfast',
+    'Accessible to Disabled', 'Free Breakfast', 'Air Conditioning', 'TV',
+    'Private Bathroom', 'Hair Dryer',
 ]
 
 const EditRoom = () => {
@@ -103,8 +104,7 @@ const EditRoom = () => {
                 <div className = 'pointer-events-none absolute -bottom-24 right-1/4 h-64 w-64 rounded-full bg-[#d9a58e]/10 blur-3xl' />
                 <div className = 'relative z-10 flex flex-wrap items-end justify-between gap-5'>
                     <div>
-                        <h1 className = 'text-3xl font-semibold tracking-tight md:text-4xl'>Edit Room</h1>
-                        <p className = 'mt-3 max-w-xl text-sm leading-7 text-[#f1e2d8]/80'>Update room names, nightly rates, facilities, and photos.</p>
+                        <h1 className = 'text-4xl font-semibold tracking-tight md:text-5xl'>Edit Room</h1>
                     </div>
                 </div>
             </section>
@@ -148,8 +148,7 @@ const EditRoom = () => {
                                 <p className = 'mt-2 text-[11px] text-[#a99a90]'>Up to four images per room. Remove an existing image to make room for a replacement.</p>
                             </div>
 
-                            <div className = 'flex flex-wrap items-center justify-between gap-3 border-t border-[#eee5de] pt-5'>
-                                <p className = 'text-xs text-[#a09287]'>Changes are saved to the room record in MongoDB.</p>
+                            <div className = 'flex flex-wrap items-center justify-end gap-3 border-t border-[#eee5de] pt-5'>
                                 <button type = 'submit' disabled = {loading} className = 'inline-flex items-center gap-2 rounded-xl bg-[#a96f58] px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#8f5946] disabled:opacity-50'><Save size = {17} />{loading ? 'Saving...' : 'Save Changes'}</button>
                             </div>
                         </form>

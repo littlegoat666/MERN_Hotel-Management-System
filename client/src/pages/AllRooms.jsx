@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react'
-import { Wifi, Coffee, Bell, Mountain, Waves, TreePine, Camera, Sofa, Car, Cigarette, Accessibility, ChevronDown, ChevronUp } from 'lucide-react'
+import { Wifi, Coffee, Bell, Mountain, Waves, TreePine, Camera, Sofa, Car, Cigarette, Accessibility, AirVent, Tv, Bath, Wind, ChevronDown, ChevronUp } from 'lucide-react'
 import { assets } from '../assets/assets'
 import { useSearchParams } from 'react-router-dom'
 import StarRating from '../components/StarRating'
@@ -20,6 +20,10 @@ const amenityIcons = {
     'Parking': { icon: Car, color: 'bg-blue-50 text-blue-700' },
     'Smoking Area': { icon: Cigarette, color: 'bg-stone-100 text-stone-700' },
     'Accessible to Disabled': { icon: Accessibility, color: 'bg-rose-50 text-rose-700' },
+    'Air Conditioning': { icon: AirVent, color: 'bg-teal-50 text-teal-700' },
+    'TV': { icon: Tv, color: 'bg-purple-50 text-purple-700' },
+    'Private Bathroom': { icon: Bath, color: 'bg-blue-50 text-blue-700' },
+    'Hair Dryer': { icon: Wind, color: 'bg-pink-50 text-pink-700' },
 }
 
 const amenityOrder = [
@@ -34,6 +38,10 @@ const amenityOrder = [
     'Security Cameras',
     'Accessible to Disabled',
     'Smoking Area',
+    'Air Conditioning',
+    'TV',
+    'Private Bathroom',
+    'Hair Dryer',
 ]
 
 const CheckBox = ({ label, selected = false, onChange = () => {} }) => {

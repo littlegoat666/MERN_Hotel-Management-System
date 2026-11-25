@@ -7,7 +7,8 @@ import toast from 'react-hot-toast'
 const defaultAmenities = [
     'Free Wi-Fi', 'Room Service', 'Mountain View', 'Pool Access', 'Garden',
     'Security Cameras', 'Furniture Included', 'Parking', 'Smoking Area',
-    'Accessible to Disabled', 'Free Breakfast',
+    'Accessible to Disabled', 'Free Breakfast', 'Air Conditioning',
+    'TV', 'Private Bathroom', 'Hair Dryer',
 ]
 
 const AddRoom = () => {
@@ -56,11 +57,8 @@ const AddRoom = () => {
                 <div className = 'pointer-events-none absolute -right-16 -top-20 h-72 w-72 rounded-full border border-white/10' />
                 <div className = 'pointer-events-none absolute -right-3 -top-8 h-52 w-52 rounded-full border border-white/10' />
                 <div className = 'pointer-events-none absolute -bottom-24 right-1/4 h-64 w-64 rounded-full bg-[#d9a58e]/10 blur-3xl' />
-                <div className = 'relative z-10 flex flex-wrap items-end justify-between gap-5'>
-                    <div>
-                        <h1 className = 'text-3xl font-semibold tracking-tight md:text-4xl'>Add Room</h1>
-                        <p className = 'mt-3 max-w-xl text-sm leading-7 text-[#f1e2d8]/80'>Create a room listing with its own name, nightly price, photos, and amenities.</p>
-                    </div>
+                <div className = 'relative z-10'>
+                    <h1 className = 'text-4xl font-semibold tracking-tight md:text-5xl'>Add Room</h1>
                 </div>
             </section>
 
@@ -70,7 +68,6 @@ const AddRoom = () => {
                         <span className = 'flex h-10 w-10 items-center justify-center rounded-xl bg-[#fff0df] text-[#d58c32]'><BedDouble size = {20} /></span>
                         <div><h2 className = 'font-semibold text-[#57463d]'>Room Information</h2><p className = 'text-xs text-[#a09287]'>Complete the details below</p></div>
                     </div>
-                    <span className = 'rounded-full bg-white px-3 py-1.5 text-[11px] font-semibold text-[#9a7057] ring-1 ring-[#eadbd0]'>NEW LISTING</span>
                 </div>
 
                 <div className = 'space-y-7 p-5 sm:p-7'>
@@ -94,12 +91,12 @@ const AddRoom = () => {
 
                     <section className = 'grid grid-cols-1 gap-5 sm:grid-cols-[1fr_210px]'>
                         <div>
-                            <label className = 'mb-2 flex items-center gap-2 text-sm font-semibold text-[#65544a]'><BedDouble size = {16} className = 'text-[#d58c32]' /> Room Name</label>
+                            <label className = 'mb-2 flex items-center gap-2 font-semibold text-[#65544a]'><BedDouble size = {16} className = 'text-[#d58c32]' /> Room Name</label>
                             <input type = 'text' value = {inputs.roomType} onChange = {(event) => setInputs((previous) => ({ ...previous, roomType: event.target.value }))} className = {inputClass} placeholder = 'e.g. Deluxe Mountain View' maxLength = {100} required />
                             <p className = 'mt-2 text-[11px] text-[#a99a90]'>You can create any room name. No fixed room types.</p>
                         </div>
                         <div>
-                            <label className = 'mb-2 flex items-center gap-2 text-sm font-semibold text-[#65544a]'><BadgeDollarSign size = {16} className = 'text-[#478f91]' /> Price / Night</label>
+                            <label className = 'mb-2 flex items-center gap-2 font-semibold text-[#65544a]'><BadgeDollarSign size = {16} className = 'text-[#478f91]' /> Price / Night</label>
                             <div className = 'relative'><span className = 'absolute left-4 top-1/2 -translate-y-1/2 text-[#9a897e]'>฿</span><input type = 'number' min = '1' step = '0.01' value = {inputs.pricePerNight} onChange = {(event) => setInputs((previous) => ({ ...previous, pricePerNight: event.target.value }))} className = {`${inputClass} pl-9`} placeholder = '0.00' required /></div>
                         </div>
                     </section>
@@ -107,7 +104,7 @@ const AddRoom = () => {
                     <section>
                         <div className = 'mb-4 flex items-center gap-2'><Sparkles size = {18} className = 'text-[#9a6ab0]' /><h3 className = 'font-semibold text-[#59483f]'>Room Amenities</h3></div>
                         <div className = 'grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-3'>
-                            {defaultAmenities.map((amenity, index) => (
+                            {defaultAmenities.map((amenity) => (
                                 <label key = {amenity} className = {`flex cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 transition ${inputs.amenities[amenity] ? 'border-[#c28b71] bg-[#f7ece5]' : 'border-[#eee5de] bg-[#fcfaf7] hover:bg-[#f8f2ec]'}`}>
                                     <input type = 'checkbox' checked = {Boolean(inputs.amenities[amenity])} onChange = {() => setInputs((previous) => ({ ...previous, amenities: { ...previous.amenities, [amenity]: !previous.amenities[amenity] } }))} className = 'h-4 w-4 accent-[#a96f58]' />
                                     <span className = 'text-xs text-[#6e5b50]'>{amenity}</span>
@@ -117,8 +114,7 @@ const AddRoom = () => {
                     </section>
                 </div>
 
-                <div className = 'flex flex-wrap items-center justify-between gap-3 border-t border-[#eee5de] bg-[#faf7f3] px-5 py-4 sm:px-7'>
-                    <p className = 'text-xs text-[#a09287]'>New room details will be saved to MongoDB.</p>
+                <div className = 'flex flex-wrap items-center justify-end gap-3 border-t border-[#eee5de] bg-[#faf7f3] px-5 py-4 sm:px-7'>
                     <button type = 'submit' disabled = {loading} className = 'inline-flex items-center gap-2 rounded-xl bg-[#a96f58] px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#8f5946] disabled:opacity-50'><PlusCircle size = {17} />{loading ? 'Adding Room...' : 'Add Room'}</button>
                 </div>
             </form>
